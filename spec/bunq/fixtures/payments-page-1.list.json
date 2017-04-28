@@ -1,0 +1,13 @@
+{
+  "Pagination": {
+    "older_url": "/v1/user/1/monetary-account/2/payment?count=1&older_id=42"
+  },
+
+  "Response": [
+    {
+      "Payment": {
+        "id": 42
+      }
+    }
+  ]
+}

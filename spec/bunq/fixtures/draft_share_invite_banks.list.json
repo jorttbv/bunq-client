@@ -1,0 +1,61 @@
+{
+  "Response": [
+    {
+      "DraftShareInviteBank": {
+        "user_alias_created": {
+          "uuid": "252e-fb1e-04b74214-b9e9467c3-c6d2fbf",
+          "avatar": {
+            "uuid": "5a442bed-3d43-4a85-b532-dbb251052f4a",
+            "anchor_uuid": "f0de919f-8c36-46ee-acb7-ea9c35c1b231",
+            "image": [
+              {
+                "attachment_public_uuid": "d93e07e3-d420-45e5-8684-fc0c09a63686",
+                "content_type": "image/jpeg",
+                "height": 380,
+                "width": 520
+              }
+            ]
+          },
+          "public_nick_name": "Mary",
+          "display_name": "Mary",
+          "country": "NL"
+        },
+        "status": "PENDING",
+        "expiration": "2015-06-29 08:05:27.249884",
+        "share_invite_bank_response_id": 42,
+        "draft_share_url": "https://qr.bunq.com/2/9/9d1a0bf938ba4a9edc87dd3e48a7ae44f81d24b4b044e2a67b60595c9a93aec7",
+        "draft_share_settings": {
+          "share_detail": {
+            "payment": {
+              "make_payments": true,
+              "make_draft_payments": true,
+              "view_balance": true,
+              "view_old_events": false,
+              "view_new_events": true,
+              "budget": {
+                "amount": {
+                  "value": "12.50",
+                  "currency": "EUR"
+                },
+                "frequency": "MONTHLY"
+              }
+            },
+            "read_only": {
+              "view_balance": true,
+              "view_old_events": false,
+              "view_new_events": true
+            },
+            "draft_payment": {
+              "make_draft_payments": true,
+              "view_balance": true,
+              "view_old_events": false,
+              "view_new_events": true
+            }
+          },
+          "start_date": "2015-06-30 09:12:31.981573",
+          "end_date": "2015-06-30 09:12:31.981573"
+        }
+      }
+    }
+  ]
+}
