@@ -18,8 +18,8 @@ Gem::Specification.new do |spec|
   ]
 
   spec.summary       = %q{Ruby client for the bunq public API.}
-  spec.description   = %q{www.jortt.nl}
-  spec.homepage      = "https://www.jortt.nl"
+  spec.description   = %q{Ruby client for the bunq public API. Extracted from www.jortt.nl}
+  spec.homepage      = "https://github.com/jorttbv/bunq-client"
   spec.license       = "MIT"
 
 
