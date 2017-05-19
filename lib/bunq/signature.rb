@@ -1,7 +1,6 @@
 require_relative 'unexpected_response'
 
 module Bunq
-
   class Signature
     # headers in raw_headers hash in rest client are all lower case
     BUNQ_HEADER_PREFIX = 'X-Bunq-'.downcase
@@ -19,7 +18,11 @@ module Bunq
     end
 
     def create(verb, path, headers, body)
-      signature = private_key.sign(digest, signable_input(verb, path, headers.select { |header_name, _| signable_header?(header_name) }, body))
+      signature = private_key.sign(
+        digest,
+        signable_input(verb, path, headers.select { |header_name, _| signable_header?(header_name) }, body)
+      )
+
       Base64.strict_encode64(signature)
     end
 
@@ -43,9 +46,10 @@ module Bunq
     end
 
     def signable_input(verb, path, headers, body)
+      sortable_headers = Hash[headers.collect{ |k,v| [k.to_s, v] }]
       head = [
         [verb, path].join(' '),
-        headers.sort.to_h.map { |k,v| "#{k}: #{v}" }.join("\n")
+        sortable_headers.sort.to_h.map { |k,v| "#{k}: #{v}" }.join("\n")
       ].join("\n")
       "#{head}\n\n#{body}"
     end

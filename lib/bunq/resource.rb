@@ -6,6 +6,7 @@ require 'json'
 module Bunq
   class Resource
     attr_reader :resource
+    NO_PARAMS = {}
 
     def initialize(client, path)
       @client = client
@@ -24,25 +25,28 @@ module Bunq
     end
 
     def get(params = {}, &block)
-      @resource.get(params: params) do |response, request, result|
+      @resource.get({params: params}.merge(bunq_request_headers('GET', params))) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
     end
 
+
     def post(payload, skip_verify = false, &block)
+      json = JSON.generate(payload)
       if skip_verify
-        @resource.post(JSON.generate(payload)) do |response, request, result|
+        @resource.post(json, bunq_request_headers('POST', NO_PARAMS, json)) do |response, request, result|
           handle_response(response, request, result, &block)
         end
       else
-        @resource.post(JSON.generate(payload)) do |response, request, result|
+        @resource.post(json, bunq_request_headers('POST', NO_PARAMS, json)) do |response, request, result|
           verify_and_handle_response(response, request, result, &block)
         end
       end
     end
 
     def put(payload, &block)
-      @resource.put(JSON.generate(payload)) do |response, request, result|
+      json = JSON.generate(payload)
+      @resource.put(json, bunq_request_headers('PUT', NO_PARAMS, json)) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
     end
@@ -62,6 +66,27 @@ module Bunq
     private
 
     attr_reader :client
+
+    def bunq_request_headers(verb, params, payload = nil)
+      request_id_header = {'X-Bunq-Client-Request-Id' => SecureRandom.uuid}
+
+      return request_id_header if @path.end_with?('/installation') && verb == 'POST'
+      request_id_header.merge('X-Bunq-Client-Signature' => sign_request(verb, params, request_id_header, payload))
+    end
+
+    def sign_request(verb, params, request_id_header, payload = nil)
+      Bunq.signature.create(
+        verb,
+        encode_params(@path, params),
+        @resource.headers.merge(request_id_header),
+        payload
+      )
+    end
+
+    def encode_params(path, params)
+      return path if params.empty?
+      "#{path}?#{URI.escape(params.collect { |k, v| "#{k}=#{v}" }.join('&'))}"
+    end
 
     def verify_and_handle_response(response, request, result, &block)
       Bunq.signature.verify!(response) unless client.configuration.disable_response_signature_verification
