@@ -56,12 +56,11 @@ module Bunq
     end
 
     def ensure_session!
-      client.current_session ||= client.session_servers.create
+      client.ensure_session!
     end
 
     def with_session(&block)
-      ensure_session!
-      block.call
+      client.with_session(&block)
     end
 
     private
