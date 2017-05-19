@@ -42,6 +42,10 @@ module Bunq
       fail 'api_key is mandatory' unless self.configuration.api_key
     end
 
+    def reset_configuration
+      self.configuration = nil
+    end
+
     ##
     # Returns a new instance of +Client+ with the current +configuration+.
     #

@@ -45,5 +45,6 @@ RSpec.configure do |config|
 
   config.after :each, :requires_session do
     expect(session_stub).to have_been_requested
+    Bunq.reset_configuration
   end
 end
