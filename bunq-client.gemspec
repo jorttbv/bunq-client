@@ -10,11 +10,13 @@ Gem::Specification.new do |spec|
     'Lars Vonk',
     'Bob Forma',
     'Derek Kraan',
+    'Mike van Diepen',
   ]
   spec.email         = [
     'lars.vonk@gmail.com',
     'bforma@zilverline.com',
-    'dkraan@zilverline.com',
+    'derek.kraan@gmail.com',
+    'mvdiepen@zilverline.com',
   ]
 
   spec.summary       = %q{Ruby client for the bunq public API.}
