@@ -1,5 +1,6 @@
 require_relative 'signature'
 require_relative 'response_errors'
+require_relative 'timeout'
 require 'restclient'
 require 'json'
 
@@ -14,7 +15,8 @@ module Bunq
       @resource = RestClient::Resource.new(
         "#{client.configuration.base_url}#{path}",
         {
-          headers: client.headers
+          headers: client.headers,
+          timeout: client.configuration.timeout,
         }.tap do |x|
           if client.configuration.sandbox
             x[:user] = client.configuration.sandbox_user
@@ -28,6 +30,8 @@ module Bunq
       @resource.get({params: params}.merge(bunq_request_headers('GET', params))) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
+    rescue RestClient::Exceptions::Timeout
+      raise Bunq::Timeout
     end
 
 
@@ -42,6 +46,8 @@ module Bunq
           verify_and_handle_response(response, request, result, &block)
         end
       end
+    rescue RestClient::Exceptions::Timeout
+      raise Bunq::Timeout
     end
 
     def put(payload, &block)
@@ -49,6 +55,8 @@ module Bunq
       @resource.put(json, bunq_request_headers('PUT', NO_PARAMS, json)) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
+    rescue RestClient::Exceptions::Timeout
+      raise Bunq::Timeout
     end
 
     def append(path)
