@@ -1,6 +1,5 @@
 require_relative 'signature'
-require_relative 'response_errors'
-require_relative 'timeout'
+require_relative 'errors'
 require 'restclient'
 require 'json'
 

@@ -1,4 +1,4 @@
-require_relative 'response_errors'
+require_relative 'errors'
 
 module Bunq
   class Signature

@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'rspec/json_expectations'
-require_relative '../../lib/bunq/timeout'
+require_relative '../../lib/bunq/errors'
 
 describe Bunq::Resource do
   let(:client) { Bunq.client }
