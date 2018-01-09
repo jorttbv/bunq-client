@@ -14,7 +14,8 @@ module Bunq
       @resource = RestClient::Resource.new(
         "#{client.configuration.base_url}#{path}",
         {
-          headers: client.headers
+          headers: client.headers,
+          timeout: client.configuration.timeout,
         }.tap do |x|
           if client.configuration.sandbox
             x[:user] = client.configuration.sandbox_user

@@ -74,6 +74,7 @@ module Bunq
     DEFAULT_REGION = 'nl_NL'
     DEFAULT_GEOLOCATION = '0 0 0 0 000'
     DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}"
+    DEFAULT_TIMEOUT = 60
 
     # Base url for the bunq api. Defaults to +PRODUCTION_BASE_URL+
     attr_accessor :base_url,
@@ -104,7 +105,10 @@ module Bunq
       # The private key for signing the request
       :private_key,
       # The public key of this installation for verifying the response
-      :server_public_key
+      :server_public_key,
+      # Timeout in seconds to wait for bunq api. Defaults to +DEFAULT_TIMEOUT+
+      :timeout
+
 
 
     def initialize
@@ -115,6 +119,7 @@ module Bunq
       @geolocation = DEFAULT_GEOLOCATION
       @user_agent = DEFAULT_USER_AGENT
       @disable_response_signature_verification = false
+      @timeout = DEFAULT_TIMEOUT
     end
   end
 
