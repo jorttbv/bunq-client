@@ -125,5 +125,21 @@ describe Bunq::Signature do
         expect { subject }.to raise_error(Bunq::UnexpectedResponse)
       end
     end
+
+    context 'given an absent server signature' do
+      let(:headers) { {} }
+
+      it 'fails' do
+        expect { subject }.to raise_error(Bunq::AbsentResponseSignature)
+      end
+    end
+
+    context 'given a server signature that is nil' do
+      let(:headers) { {:'X-Bunq-Server-Signature' => nil} }
+
+      it 'fails' do
+        expect { subject }.to raise_error(Bunq::AbsentResponseSignature)
+      end
+    end
   end
 end
