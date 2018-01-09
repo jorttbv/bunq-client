@@ -127,12 +127,15 @@ describe Bunq::Signature do
     end
 
     context 'given an absent server signature' do
-      let(:headers) do
-        {
-          :'X-Bunq-Client-Request-Id' => ['57061b04b67ef'],
-          :'X-Bunq-Server-Response-Id' => ['89dcaa5c-fa55-4068-9822-3f87985d2268'],
-        }
+      let(:headers) { {} }
+
+      it 'fails' do
+        expect { subject }.to raise_error(Bunq::AbsentResponseSignature)
       end
+    end
+
+    context 'given a server signature that is nil' do
+      let(:headers) { {:'X-Bunq-Server-Signature' => nil} }
 
       it 'fails' do
         expect { subject }.to raise_error(Bunq::AbsentResponseSignature)

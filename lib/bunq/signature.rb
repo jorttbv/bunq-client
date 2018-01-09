@@ -33,7 +33,10 @@ module Bunq
       signature_headers = response.raw_headers.find { |k, _| k.to_s.downcase == BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER }
       fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers
 
-      signature = Base64.strict_decode64(signature_headers[1].first)
+      signature_headers_value = signature_headers[1]
+      fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers_value
+
+      signature = Base64.strict_decode64(signature_headers_value.first)
       fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body) unless server_public_key.verify(digest, signature, data)
     end
 
