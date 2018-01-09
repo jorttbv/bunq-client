@@ -1,5 +1,6 @@
 require_relative 'signature'
 require_relative 'unexpected_response'
+require_relative 'timeout'
 require 'restclient'
 require 'json'
 
@@ -29,6 +30,8 @@ module Bunq
       @resource.get({params: params}.merge(bunq_request_headers('GET', params))) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
+    rescue RestClient::Exceptions::Timeout
+      raise Bunq::Timeout
     end
 
 
@@ -43,6 +46,8 @@ module Bunq
           verify_and_handle_response(response, request, result, &block)
         end
       end
+    rescue RestClient::Exceptions::Timeout
+      raise Bunq::Timeout
     end
 
     def put(payload, &block)
@@ -50,6 +55,8 @@ module Bunq
       @resource.put(json, bunq_request_headers('PUT', NO_PARAMS, json)) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
+    rescue RestClient::Exceptions::Timeout
+      raise Bunq::Timeout
     end
 
     def append(path)
