@@ -1,4 +1,4 @@
-require_relative 'unexpected_response'
+require_relative 'response_errors'
 
 module Bunq
   class MissingPaginationObject < UnexpectedResponse; end

@@ -1,4 +1,4 @@
-require_relative 'unexpected_response'
+require_relative 'response_errors'
 
 module Bunq
   class Signature
@@ -30,10 +30,10 @@ module Bunq
       sorted_bunq_headers = response.raw_headers.select(&method(:verifiable_header?)).sort.to_h.map { |k, v| "#{k.to_s.split('-').map(&:capitalize).join('-')}: #{v.first}" }
       data = %Q{#{response.code}\n#{sorted_bunq_headers.join("\n")}\n\n#{response.body}}
 
-      signature_headers = response.raw_headers.find { |k, _| k.to_s.downcase == BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER }[1]
-      fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers
+      signature_headers = response.raw_headers.find { |k, _| k.to_s.downcase == BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER }
+      fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers
 
-      signature = Base64.strict_decode64(signature_headers.first)
+      signature = Base64.strict_decode64(signature_headers[1].first)
       fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body) unless server_public_key.verify(digest, signature, data)
     end
 
