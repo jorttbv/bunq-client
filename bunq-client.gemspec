@@ -10,11 +10,13 @@ Gem::Specification.new do |spec|
     'Lars Vonk',
     'Bob Forma',
     'Derek Kraan',
+    'Mike van Diepen',
   ]
   spec.email         = [
     'lars.vonk@gmail.com',
     'bforma@zilverline.com',
-    'dkraan@zilverline.com',
+    'derek.kraan@gmail.com',
+    'mvdiepen@zilverline.com',
   ]
 
   spec.summary       = %q{Ruby client for the bunq public API.}
@@ -32,10 +34,10 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'rest-client', '~> 2.0'
 
-  spec.add_development_dependency "bundler", "~> 1.13"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.5"
-  spec.add_development_dependency "webmock", "~> 2.3.2"
+  spec.add_development_dependency "bundler", "~> 1.16.1"
+  spec.add_development_dependency "rake", "~> 12.3"
+  spec.add_development_dependency "rspec", "~> 3.7"
+  spec.add_development_dependency "webmock", "~> 3.2.1"
   spec.add_development_dependency "rspec-json_expectations", "~> 2.1"
   spec.add_development_dependency "codecov", "~> 0.1.10"
 end
