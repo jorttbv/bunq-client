@@ -161,6 +161,7 @@ module Bunq
       Bunq::UserCompany.new(self, id)
     end
 
+    # Returns the +Bunq::AttachmentPublicContent+ represented by the given id
     def attachment_public_content(id)
       with_session { Bunq::AttachmentPublicContent.new(self, id) }
     end
