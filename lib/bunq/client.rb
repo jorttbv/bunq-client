@@ -14,6 +14,7 @@ require_relative './monetary_account'
 require_relative './monetary_accounts'
 require_relative './payments'
 require_relative './signature'
+require_relative './attachment_public_content.rb'
 
 ##
 # Usage
@@ -158,6 +159,10 @@ module Bunq
 
     def user_company(id)
       Bunq::UserCompany.new(self, id)
+    end
+
+    def attachment_public_content(id)
+      with_session { Bunq::AttachmentPublicContent.new(self, id) }
     end
 
     # Returns the +Bunq::UserCompany+ represented by the +Bunq::Configuration.api_key+
