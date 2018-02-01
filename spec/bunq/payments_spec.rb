@@ -45,4 +45,19 @@ describe Bunq::Payments, :requires_session do
       end
     end
   end
+
+  describe '#show' do
+    let(:response) { IO.read('spec/bunq/fixtures/payments.get.json') }
+    let(:payment_id) { 10 }
+
+    it 'returns a specific payment' do
+      stub_request(:get, "#{user_url}/monetary-account/2/payment/#{payment_id}").
+        to_return({
+          body: response
+        })
+
+      result = user.monetary_account(2).payments.show(payment_id)
+      expect(result).to include_json ([{"Payment": {"id": 42}}])
+    end
+  end
 end

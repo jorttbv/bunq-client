@@ -13,5 +13,11 @@ module Bunq
         .new(@resource)
         .paginate(count: count, older_id: older_id, newer_id: newer_id)
     end
+
+    # https://doc.bunq.com/api/1/call/payment/method/get
+    def show(id)
+      @resource = @resource.append("/#{id}")
+      @resource.with_session { @resource.get }['Response']
+    end
   end
 end
