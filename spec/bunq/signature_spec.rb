@@ -126,6 +126,23 @@ describe Bunq::Signature do
       end
     end
 
+    context 'given a too many requests sandbox response' do
+      let(:code) { 409 }
+
+      it 'fails' do
+        expect { subject }.to raise_error(Bunq::TooManyRequestsResponse)
+      end
+    end
+
+    context 'given a too many requests production response' do
+      let(:code) { 429 }
+
+      it 'fails' do
+        expect { subject }.to raise_error(Bunq::TooManyRequestsResponse)
+      end
+    end
+
+
     context 'given an absent server signature' do
       let(:headers) { {} }
 
