@@ -30,9 +30,7 @@ module Bunq
       sorted_bunq_headers = response.raw_headers.select(&method(:verifiable_header?)).sort.to_h.map { |k, v| "#{k.to_s.split('-').map(&:capitalize).join('-')}: #{v.first}" }
       data = %Q{#{response.code}\n#{sorted_bunq_headers.join("\n")}\n\n#{response.body}}
 
-      if response.code == 409 || response.code == 429
-        fail TooManyRequestsResponse.new(code: response.code, headers: response.raw_headers, body: response.body) 
-      end
+      return if response.code == 409 || response.code == 429
 
       signature_headers = response.raw_headers.find { |k, _| k.to_s.downcase == BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER }
       fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers
