@@ -6,6 +6,10 @@ module Bunq
       @resource = parent_resource.append("/monetary-account/#{id}")
     end
 
+    def payment(id)
+      Bunq::Payment.new(@resource, id)
+    end
+
     def payments
       Bunq::Payments.new(@resource)
     end
