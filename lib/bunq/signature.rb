@@ -27,6 +27,8 @@ module Bunq
     end
 
     def verify!(response)
+      return if skip_signature_check(response.code)
+
       sorted_bunq_headers = response.raw_headers.select(&method(:verifiable_header?)).sort.to_h.map { |k, v| "#{k.to_s.split('-').map(&:capitalize).join('-')}: #{v.first}" }
       data = %Q{#{response.code}\n#{sorted_bunq_headers.join("\n")}\n\n#{response.body}}
 
@@ -65,6 +67,10 @@ module Bunq
     def verifiable_header?(header_name, _)
       _header_name = header_name.to_s.downcase
       _header_name.start_with?(BUNQ_HEADER_PREFIX) && _header_name != BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER
+    end
+
+    def skip_signature_check(responseCode)
+      (Bunq::configuration.sandbox && responseCode == 409) || responseCode == 429
     end
   end
 end

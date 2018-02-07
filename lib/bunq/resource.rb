@@ -101,13 +101,14 @@ module Bunq
     end
 
     def handle_response(response, _request, _result, &block)
-      case response.code
-      when 200, 201
+      if response.code == 200 || response.code == 201
         if block_given?
           yield(response)
         else
           JSON.parse(response.body)
         end
+      elsif (response.code == 409 && Bunq::configuration.sandbox) || response.code == 429
+        fail TooManyRequestsResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       else
         fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       end

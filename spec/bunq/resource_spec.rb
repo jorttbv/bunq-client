@@ -31,4 +31,28 @@ describe Bunq::Resource do
       expect { resource.post({}) }.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
     end
   end
+
+  context 'too many requests sandbox response' do
+    before do
+      Bunq.configure do |config|
+        config.sandbox = true
+      end
+    end
+
+    it 'fails' do
+      stub_request(:get, "#{url}/timeout")
+        .to_return({ status: 409 })
+
+      expect { resource.get({}) }.to raise_error(Bunq::TooManyRequestsResponse)
+    end
+  end
+
+  context 'too many requests production response' do
+    it 'fails' do
+      stub_request(:get, "#{url}/timeout")
+        .to_return({ status: 429 })
+
+      expect { resource.get({}) }.to raise_error(Bunq::TooManyRequestsResponse)
+    end
+  end
 end
