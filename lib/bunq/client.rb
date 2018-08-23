@@ -69,7 +69,7 @@ module Bunq
   # Configuration object for connecting to the bunq api
   #
   class Configuration
-    SANDBOX_BASE_URL = 'https://sandbox.public.api.bunq.com'
+    SANDBOX_BASE_URL = 'https://public-api.sandbox.bunq.com'
     PRODUCTION_BASE_URL = 'https://api.bunq.com'
 
     DEFAULT_LANGUAGE = 'nl_NL'
