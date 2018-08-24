@@ -55,14 +55,6 @@ module Bunq
       fail "No configuration! Call Bunq.configure first." unless configuration
       Client.new(configuration)
     end
-
-    ##
-    # Returns a new instance of +Signature+
-    #
-    def signature
-      fail "No configuration! Call Bunq.configure first." unless configuration
-      Signature.new(configuration.private_key, configuration.server_public_key)
-    end
   end
 
   ##
@@ -111,8 +103,6 @@ module Bunq
       # Timeout in seconds to wait for bunq api. Defaults to +DEFAULT_TIMEOUT+
       :timeout
 
-
-
     def initialize
       @sandbox = false
       @base_url = PRODUCTION_BASE_URL
@@ -133,8 +123,10 @@ module Bunq
 
     attr_accessor :current_session
     attr_reader :configuration
+    attr_reader :signature
 
     def initialize(configuration)
+      fail ArgumentError.new('configuration is required') unless configuration
       @configuration = configuration
     end
 
@@ -184,6 +176,10 @@ module Bunq
     def with_session(&block)
       ensure_session!
       block.call
+    end
+
+    def signature
+      Signature.new(configuration.private_key, configuration.server_public_key)
     end
 
     def headers

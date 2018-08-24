@@ -82,7 +82,7 @@ module Bunq
     end
 
     def sign_request(verb, params, request_id_header, payload = nil)
-      Bunq.signature.create(
+      client.signature.create(
         verb,
         encode_params(@path, params),
         @resource.headers.merge(request_id_header),
@@ -96,7 +96,7 @@ module Bunq
     end
 
     def verify_and_handle_response(response, request, result, &block)
-      Bunq.signature.verify!(response) unless client.configuration.disable_response_signature_verification
+      client.signature.verify!(response) unless client.configuration.disable_response_signature_verification
       handle_response(response, request, result, &block)
     end
 
