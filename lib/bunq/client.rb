@@ -40,8 +40,6 @@ module Bunq
       yield(configuration)
 
       configuration.base_url = Configuration::SANDBOX_BASE_URL if configuration.sandbox
-
-      fail 'api_key is mandatory' unless self.configuration.api_key
     end
 
     def reset_configuration
