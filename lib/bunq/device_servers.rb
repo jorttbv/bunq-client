@@ -15,6 +15,7 @@ module Bunq
     # https://doc.bunq.com/api/1/call/device-server/method/post
     def create(description)
       fail ArgumentError.new('description is required') unless description
+      fail 'Cannot create session, please add the api_key to your configuration' unless @client.configuration.api_key
 
       @resource.post(description: description, secret: @client.configuration.api_key)['Response']
     end

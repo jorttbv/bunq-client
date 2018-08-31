@@ -10,7 +10,7 @@ module Bunq
     ##
     # https://doc.bunq.com/api/1/call/session-server/method/post
     def create
-      fail 'Cannot create session, please provide api_key to Bunq::Client' unless @api_key
+      fail 'Cannot create session, please add the api_key to your configuration' unless @api_key
       @resource.post(secret: @api_key)['Response']
     end
   end
