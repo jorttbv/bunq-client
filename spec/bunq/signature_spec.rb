@@ -18,7 +18,7 @@ describe Bunq::Signature do
     let(:headers) { signable_headers }
     let(:body) { '{"amount": 10}' }
 
-    subject { Bunq.signature.create(verb, path, headers, body) }
+    subject { Bunq.client.signature.create(verb, path, headers, body) }
 
     let(:expected_signature) do
       'o5AXc4Ag72GzfzXwDbvlEck3SnrEILHVjmc6wJhjZVGn+rtPmAilCKQiSvneo2VbjwuP2vHJdZEQk4NF/1PmrVByUjdmCF/' \
@@ -112,7 +112,7 @@ describe Bunq::Signature do
         body: body
       )
     end
-    subject { Bunq.signature.verify!(response) }
+    subject { Bunq.client.signature.verify!(response) }
 
     it 'does not raise an error' do
       expect { subject }.to_not raise_error
