@@ -1,19 +1,32 @@
 module Bunq
-  class UnexpectedResponse < StandardError;
+  class ResponseError < StandardError
     attr_reader :code
     attr_reader :headers
     attr_reader :body
 
-    def initialize(msg = "Unexpected response", code: nil, headers: nil, body: nil)
+    def initialize(msg = "Response error", code: nil, headers: nil, body: nil)
       @code = code
       @headers = headers
       @body = body
       super(msg)
     end
+
+    # Returns the parsed body if it is a JSON document, nil otherwise.
+    # @param opts [Hash] Optional options that are passed to `JSON.parse`.
+    def parsed_body(opts = {})
+      JSON.parse(@body, opts) if @body && @headers['Content-Type'] == 'application/json'
+    end
+
+    # Returns an array of errors returned from the API, or nil if no errors are returned.
+    # @return [Array|nil]
+    def errors
+      json = parsed_body
+      json ? json['Error'] : nil
+    end
   end
 
-  class AbsentResponseSignature < StandardError; end
-  class TooManyRequestsResponse < StandardError; end
+  class UnexpectedResponse < ResponseError; end
+  class AbsentResponseSignature < ResponseError; end
+  class TooManyRequestsResponse < ResponseError; end
   class Timeout < StandardError; end
-  class Unauthorized < StandardError; end
 end
