@@ -6,7 +6,7 @@ module Bunq
 
     def initialize(msg = "Response error", code: nil, headers: nil, body: nil)
       @code = code
-      @headers = headers
+      @headers = headers || {}
       @body = body
       super(msg)
     end
