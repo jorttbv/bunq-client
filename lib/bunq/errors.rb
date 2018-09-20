@@ -14,7 +14,7 @@ module Bunq
     # Returns the parsed body if it is a JSON document, nil otherwise.
     # @param opts [Hash] Optional options that are passed to `JSON.parse`.
     def parsed_body(opts = {})
-      JSON.parse(@body, opts) if @body && @headers['content-type'] == 'application/json'
+      JSON.parse(@body, opts) if @body && @headers['content-type'].include?('application/json')
     end
 
     # Returns an array of errors returned from the API, or nil if no errors are returned.
