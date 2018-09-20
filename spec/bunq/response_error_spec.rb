@@ -4,7 +4,7 @@ describe Bunq::ResponseError do
   context 'with a JSON body' do
     let(:error) {
       json = '{"Error": "foo"}'
-      Bunq::ResponseError.new(code: 400, headers: { 'Content-Type' => 'application/json' }, body: json)
+      Bunq::ResponseError.new(code: 400, headers: { 'content-type' => ['application/json'] }, body: json)
     }
 
     describe '#parsed_body' do
