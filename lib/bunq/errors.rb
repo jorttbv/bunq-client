@@ -8,7 +8,7 @@ module Bunq
       @code = code
       @headers = headers || {}
       @body = body
-      super(msg)
+      super("#{msg}: #{body}")
     end
 
     # Returns the parsed body if it is a JSON document, nil otherwise.
