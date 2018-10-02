@@ -22,6 +22,7 @@ require_relative './attachment_public_content.rb'
 #
 #   Bunq.configure do |config|
 #     config.api_key = 'YOUR_APIKEY'
+#     config.installation_token = 'YOUR_INSTALLATION_TOKEN'
 #     config.private_key = 'YOUR PRIVATE KEY'
 #     config.server_public_key = 'SERVER PUBLIC KEY'
 #   end
