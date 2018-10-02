@@ -13,11 +13,20 @@ module Bunq
 
     ##
     # https://doc.bunq.com/api/1/call/device-server/method/post
-    def create(description)
+    #
+    # You can add a wildcard IP by passing an array of the current IP,
+    # and the `*` character. E.g.: ['1.2.3.4', '*'].
+    #
+    # @param description [String] The description of this device server.
+    # @param permitted_ips [Array|nil] Array of permitted IP addresses.
+    def create(description, permitted_ips: nil)
       fail ArgumentError.new('description is required') unless description
       fail 'Cannot create session, please add the api_key to your configuration' unless @client.configuration.api_key
 
-      @resource.post(description: description, secret: @client.configuration.api_key)['Response']
+      params = { description: description, secret: @client.configuration.api_key }
+      params[:permitted_ips] = permitted_ips if permitted_ips
+
+      @resource.post(params)['Response']
     end
 
     ##

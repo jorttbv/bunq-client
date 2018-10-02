@@ -10,6 +10,7 @@ describe Bunq::DeviceServers do
   describe '#create' do
     let(:api_key) { Bunq.client.configuration.api_key }
     let(:description) { 'rspec server' }
+    let(:permitted_ips) {  ['1.2.3.4', '*'] }
 
     it 'fails when no description is passed' do
       expect { device_servers.create(nil) }.to raise_error ArgumentError
@@ -28,13 +29,13 @@ describe Bunq::DeviceServers do
       it 'returns the id of the created device server' do
         stub_request(:post, bunq_uri).
           with(
-            body: {description: description, secret: api_key}
+            body: {description: description, secret: api_key, permitted_ips: permitted_ips}
           ).
           to_return({
             body: JSON.dump(response)
           })
 
-        result = device_servers.create(description)
+        result = device_servers.create(description, permitted_ips: permitted_ips)
         expect(result).to include_json([{
           "Id": {
             "id": 30
