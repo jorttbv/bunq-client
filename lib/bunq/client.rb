@@ -22,7 +22,7 @@ require_relative './attachment_public_content.rb'
 #
 #   Bunq.configure do |config|
 #     config.api_key = 'YOUR_APIKEY'
-#     config.installation_token = 'YOUR_INSTALLATION_TOKEN' 
+#     config.installation_token = 'YOUR_INSTALLATION_TOKEN'
 #     config.private_key = 'YOUR PRIVATE KEY'
 #     config.server_public_key = 'SERVER PUBLIC KEY'
 #   end
@@ -118,7 +118,9 @@ module Bunq
   #
   # An instance of a +Client+ can be obtained via +Bunq.client+
   class Client
+    SessionData = Struct.new(:token, :user_id, :expires_in)
 
+    # @type SessionData
     attr_accessor :current_session
     attr_reader :configuration
     attr_reader :signature
@@ -168,7 +170,19 @@ module Bunq
     end
 
     def ensure_session!
-      @current_session ||= session_servers.create
+      @current_session ||= begin
+        session = session_servers.create
+
+        timeout = session[2].dig('UserApiKey', 'requested_by_user', 'UserPerson', 'session_timeout') ||
+          session[2].dig('UserPerson', 'session_timeout') ||
+          session[2].dig('UserCompany', 'session_timeout')
+
+        SessionData.new(
+          session[1]['Token']['token'],
+          session[2].first[1]['id'],
+          timeout
+        )
+      end
     end
 
     def with_session(&block)
@@ -195,13 +209,13 @@ module Bunq
         end
 
         if current_session
-          h[:'X-Bunq-Client-Authentication'] = current_session[1]['Token']['token']
+          h[:'X-Bunq-Client-Authentication'] = current_session.token
         end
       end
     end
 
     def current_session_user_id
-      current_session[2].first[1]['id']
+      current_session.user_id
     end
   end
 end
