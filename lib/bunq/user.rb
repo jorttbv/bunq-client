@@ -4,6 +4,8 @@ require_relative 'monetary_accounts'
 require_relative 'draft_share_invite_bank'
 require_relative 'draft_share_invite_banks'
 require_relative 'certificate_pinned'
+require_relative 'card'
+require_relative 'cards'
 
 module Bunq
   class User
@@ -29,6 +31,14 @@ module Bunq
 
     def certificate_pinned
       Bunq::CertificatePinned.new(@resource)
+    end
+
+    def card(id)
+      Bunq::Card.new(@resource, id)
+    end
+
+    def cards
+      Bunq::Cards.new(@resource)
     end
 
     def show
