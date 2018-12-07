@@ -7,6 +7,7 @@ require_relative './resource'
 require_relative './installations'
 require_relative './installation'
 require_relative './device_servers'
+require_relative './encryptor'
 require_relative './session_servers'
 require_relative './user'
 require_relative './user_company'
@@ -22,7 +23,7 @@ require_relative './attachment_public_content.rb'
 #
 #   Bunq.configure do |config|
 #     config.api_key = 'YOUR_APIKEY'
-#     config.installation_token = 'YOUR_INSTALLATION_TOKEN' 
+#     config.installation_token = 'YOUR_INSTALLATION_TOKEN'
 #     config.private_key = 'YOUR PRIVATE KEY'
 #     config.server_public_key = 'SERVER PUBLIC KEY'
 #   end
@@ -121,7 +122,6 @@ module Bunq
 
     attr_accessor :current_session
     attr_reader :configuration
-    attr_reader :signature
 
     def initialize(configuration)
       fail ArgumentError.new('configuration is required') unless configuration
@@ -177,7 +177,11 @@ module Bunq
     end
 
     def signature
-      Signature.new(configuration.private_key, configuration.server_public_key)
+      @signature ||= Signature.new(configuration.private_key, configuration.server_public_key)
+    end
+
+    def encryptor
+      @encryptor ||= Encryptor.new(configuration.server_public_key)
     end
 
     def headers

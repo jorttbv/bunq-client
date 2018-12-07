@@ -1,4 +1,3 @@
-require_relative 'signature'
 require_relative 'errors'
 require 'restclient'
 require 'json'
@@ -34,14 +33,16 @@ module Bunq
     end
 
 
-    def post(payload, skip_verify = false, &block)
-      json = JSON.generate(payload)
-      if skip_verify
-        @resource.post(json, bunq_request_headers('POST', NO_PARAMS, json)) do |response, request, result|
+    def post(payload, skip_verify: false, encrypt: false, &block)
+      body = JSON.generate(payload)
+      body, headers = client.encryptor.encrypt(body) if encrypt
+
+      headers = bunq_request_headers('POST', NO_PARAMS, body, headers || {})
+
+      @resource.post(body, headers) do |response, request, result|
+        if skip_verify
           handle_response(response, request, result, &block)
-        end
-      else
-        @resource.post(json, bunq_request_headers('POST', NO_PARAMS, json)) do |response, request, result|
+        else
           verify_and_handle_response(response, request, result, &block)
         end
       end
@@ -49,9 +50,13 @@ module Bunq
       raise Bunq::Timeout
     end
 
-    def put(payload, &block)
-      json = JSON.generate(payload)
-      @resource.put(json, bunq_request_headers('PUT', NO_PARAMS, json)) do |response, request, result|
+    def put(payload, encrypt: false, &block)
+      body = JSON.generate(payload)
+      body, headers = client.encryptor.encrypt(body) if encrypt
+
+      headers = bunq_request_headers('PUT', NO_PARAMS, body, headers || {})
+
+      @resource.put(body, headers) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
     rescue RestClient::Exceptions::Timeout
@@ -74,18 +79,21 @@ module Bunq
 
     attr_reader :client
 
-    def bunq_request_headers(verb, params, payload = nil)
-      request_id_header = {'X-Bunq-Client-Request-Id' => SecureRandom.uuid}
+    def bunq_request_headers(verb, params, payload = nil, headers = {})
+      headers['X-Bunq-Client-Request-Id'] = SecureRandom.uuid
 
-      return request_id_header if @path.end_with?('/installation') && verb == 'POST'
-      request_id_header.merge('X-Bunq-Client-Signature' => sign_request(verb, params, request_id_header, payload))
+      unless @path.end_with?('/installation') && verb == 'POST'
+        headers['X-Bunq-Client-Signature'] = sign_request(verb, params, headers, payload)
+      end
+
+      headers
     end
 
-    def sign_request(verb, params, request_id_header, payload = nil)
+    def sign_request(verb, params, headers, payload = nil)
       client.signature.create(
         verb,
         encode_params(@path, params),
-        @resource.headers.merge(request_id_header),
+        @resource.headers.merge(headers),
         payload
       )
     end
@@ -107,7 +115,7 @@ module Bunq
         else
           JSON.parse(response.body)
         end
-      elsif (response.code == 409 && Bunq::configuration.sandbox) || response.code == 429
+      elsif (response.code == 409 && Bunq.configuration.sandbox) || response.code == 429
         fail TooManyRequestsResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       else
         fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
