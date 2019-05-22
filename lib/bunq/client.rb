@@ -11,6 +11,7 @@ require_relative './encryptor'
 require_relative './session_servers'
 require_relative './user'
 require_relative './user_company'
+require_relative './user_person'
 require_relative './monetary_account'
 require_relative './monetary_accounts'
 require_relative './payment'
@@ -152,9 +153,18 @@ module Bunq
       Bunq::UserCompany.new(self, id)
     end
 
+    def user_person(id)
+      Bunq::UserPerson.new(self, id)
+    end
+
     # Returns the +Bunq::AttachmentPublicContent+ represented by the given id
     def attachment_public_content(id)
       with_session { Bunq::AttachmentPublicContent.new(self, id) }
+    end
+
+    # Returns the +Bunq::UserPerson+ represented by the +Bunq::Configuration.api_key+
+    def me_as_user_person
+      with_session { user_person(current_session_user_id) }
     end
 
     # Returns the +Bunq::UserCompany+ represented by the +Bunq::Configuration.api_key+
