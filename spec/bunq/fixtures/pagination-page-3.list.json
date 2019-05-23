@@ -1,0 +1,15 @@
+{
+  "Pagination": {
+    "future_url": null,
+    "newer_url": "/v1/user/1/monetary-account/2/payment?count=1&newer_id=170",
+    "older_url": null
+  },
+
+  "Response": [
+    {
+      "Payment": {
+        "id": 170
+      }
+    }
+  ]
+}

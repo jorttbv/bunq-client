@@ -40,10 +40,20 @@ module Bunq
           pagination = result['Pagination']
           fail MissingPaginationObject unless pagination
 
-          last_page = !pagination['older_url']
-          next_params = params.merge(older_id: param('older_id', pagination['older_url'])) unless last_page
+          last_page = !pagination[paging_url(params)]
+          next_params = params.merge(:"#{paging_id(params)}" => param(paging_id(params), pagination[paging_url(params)])) unless last_page
         end
       end
+    end
+
+    def paging_url(params)
+      return 'newer_url' if params[:newer_id]
+      'older_url'
+    end
+
+    def paging_id(params)
+      return 'newer_id' if params[:newer_id]
+      'older_id'
     end
 
     def param(name, url)
