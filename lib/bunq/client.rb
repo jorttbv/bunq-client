@@ -1,5 +1,6 @@
 require 'openssl'
 require 'base64'
+require 'thread_safe'
 
 require_relative './version'
 require_relative './resource'
@@ -65,6 +66,32 @@ module Bunq
     end
   end
 
+  class NilSessionCache
+    def get(&block)
+      block.call
+    end
+
+    def clear
+      # no-op
+    end
+  end
+
+  class ThreadSafeSessionCache
+    CACHE_KEY = 'CURRENT_BUNQ_SESSION'
+
+    def initialize
+      clear
+    end
+
+    def get(&block)
+      @cache.fetch_or_store(CACHE_KEY) { block.call if block_given? }
+    end
+
+    def clear
+      @cache = ThreadSafe::Cache.new
+    end
+  end
+
   ##
   # Configuration object for connecting to the bunq api
   #
@@ -78,6 +105,7 @@ module Bunq
     DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}"
     DEFAULT_TIMEOUT = 60
     DEFAULT_CACHE_CLIENT = false
+    DEFAULT_SESSION_CACHE = NilSessionCache.new
 
     # Base url for the bunq api. Defaults to +PRODUCTION_BASE_URL+
     attr_accessor :base_url,
@@ -112,7 +140,8 @@ module Bunq
       # Timeout in seconds to wait for bunq api. Defaults to +DEFAULT_TIMEOUT+
       :timeout,
       # Whether or not to cache client instances created by +Bunq.client+. Defaults to +DEFAULT_CACHE_CLIENT+.
-      :cache_client
+      :cache_client,
+      :session_cache
 
     def initialize
       @sandbox = false
@@ -124,6 +153,7 @@ module Bunq
       @disable_response_signature_verification = false
       @timeout = DEFAULT_TIMEOUT
       @cache_client = DEFAULT_CACHE_CLIENT
+      @session_cache = DEFAULT_SESSION_CACHE
     end
   end
 
@@ -189,12 +219,21 @@ module Bunq
     end
 
     def ensure_session!
-      @current_session ||= session_servers.create
+      @current_session ||= configuration.session_cache.get { create_session }
+    end
+
+    def create_session
+      session_servers.create
     end
 
     def with_session(&block)
+      retries ||= 0
       ensure_session!
       block.call
+    rescue UnauthorisedResponse => e
+      configuration.session_cache.clear
+      retry if (retries += 1) < 2
+      raise e
     end
 
     def signature

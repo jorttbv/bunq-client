@@ -117,6 +117,8 @@ module Bunq
         end
       elsif (response.code == 409 && Bunq.configuration.sandbox) || response.code == 429
         fail TooManyRequestsResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
+      elsif response.code == 401
+        fail UnauthorisedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       else
         fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       end
