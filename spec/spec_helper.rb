@@ -33,6 +33,8 @@ RSpec.configure do |config|
   config.include RequiresSessionExampleGroup, :requires_session
 
   config.before do
+    Bunq.reset_configuration
+
     Bunq.configure do |c|
       c.disable_response_signature_verification = true
       c.installation_token = 'foo'
@@ -45,6 +47,5 @@ RSpec.configure do |config|
 
   config.after :each, :requires_session do
     expect(session_stub).to have_been_requested
-    Bunq.reset_configuration
   end
 end
