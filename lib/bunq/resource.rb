@@ -67,10 +67,6 @@ module Bunq
       Bunq::Resource.new(client, @path + path)
     end
 
-    def ensure_session!
-      client.ensure_session!
-    end
-
     def with_session(&block)
       client.with_session(&block)
     end
