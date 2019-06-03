@@ -165,7 +165,6 @@ module Bunq
   #
   # An instance of a +Client+ can be obtained via +Bunq.client+
   class Client
-
     attr_accessor :current_session
     attr_reader :configuration
 
