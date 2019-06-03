@@ -58,6 +58,16 @@ module Bunq
     end
   end
 
+  class NoSessionCache
+    def get(&block)
+      block.call if block_given?
+    end
+
+    def clear
+      # no-op
+    end
+  end
+
   class ThreadSafeSessionCache
     CACHE_KEY = 'CURRENT_BUNQ_SESSION'
 
@@ -86,6 +96,7 @@ module Bunq
     DEFAULT_GEOLOCATION = '0 0 0 0 000'
     DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}"
     DEFAULT_TIMEOUT = 60
+    DEFAULT_SESSION_CACHE = NoSessionCache.new
 
     # Base url for the bunq api. Defaults to +PRODUCTION_BASE_URL+
     attr_accessor :base_url,
@@ -119,6 +130,9 @@ module Bunq
       :server_public_key,
       # Timeout in seconds to wait for bunq api. Defaults to +DEFAULT_TIMEOUT+
       :timeout,
+      # Cache to retrieve sessions from. Defaults to +DEFAULT_SESSION_CACHE+,
+      # which will create a new session per `Bunq.client` instance.
+      # See +ThreadSafeSessionCache+ for more advanced use.
       :session_cache
 
     def initialize
@@ -130,7 +144,7 @@ module Bunq
       @user_agent = DEFAULT_USER_AGENT
       @disable_response_signature_verification = false
       @timeout = DEFAULT_TIMEOUT
-      @session_cache = ThreadSafeSessionCache.new
+      @session_cache = DEFAULT_SESSION_CACHE
     end
   end
 
