@@ -68,6 +68,18 @@ module Bunq
     end
   end
 
+  ##
+  # A thread-safe session cache that can hold one (the current) session.
+  #
+  # Usage:
+  #
+  # Bunq.configure do |config|
+  #   config.session_cache = Bunq::ThreadSafeSessionCache.new
+  # end
+  #
+  # After this, all +Bunq.client+ calls will use the same session. When the session times out,
+  # a new one is started automatically.
+  #
   class ThreadSafeSessionCache
     CACHE_KEY = 'CURRENT_BUNQ_SESSION'
 
