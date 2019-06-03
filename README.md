@@ -137,6 +137,17 @@ Bunq.client.me_as_user.monetary_accounts.index.each do |monetary_account|
 end
 ```
 
+## Session caching
+
+By default, each `Bunq.client` creates a new session. If you want to share a session between multiple
+`Bunq.client`s, use the following configuration:
+
+```
+Bunq.configure do |config|
+  config.session_cache = Bunq::ThreadSafeSessionCache.new
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

@@ -24,7 +24,6 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/jorttbv/bunq-client"
   spec.license       = "MIT"
 
-
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
@@ -33,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency 'rest-client', '~> 2.0'
+  spec.add_runtime_dependency 'thread_safe', '~> 0.3.6'
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 12.3"

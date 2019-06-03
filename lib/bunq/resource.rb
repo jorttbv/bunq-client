@@ -10,22 +10,10 @@ module Bunq
     def initialize(client, path)
       @client = client
       @path = path
-      @resource = RestClient::Resource.new(
-        "#{client.configuration.base_url}#{path}",
-        {
-          headers: client.headers,
-          timeout: client.configuration.timeout,
-        }.tap do |x|
-          if client.configuration.sandbox
-            x[:user] = client.configuration.sandbox_user
-            x[:password] = client.configuration.sandbox_password
-          end
-        end
-      )
     end
 
     def get(params = {}, &block)
-      @resource.get({params: params}.merge(bunq_request_headers('GET', params))) do |response, request, result|
+      resource.get({params: params}.merge(bunq_request_headers('GET', params))) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
     rescue RestClient::Exceptions::Timeout
@@ -39,7 +27,7 @@ module Bunq
 
       headers = bunq_request_headers('POST', NO_PARAMS, body, headers || {})
 
-      @resource.post(body, headers) do |response, request, result|
+      resource.post(body, headers) do |response, request, result|
         if skip_verify
           handle_response(response, request, result, &block)
         else
@@ -56,7 +44,7 @@ module Bunq
 
       headers = bunq_request_headers('PUT', NO_PARAMS, body, headers || {})
 
-      @resource.put(body, headers) do |response, request, result|
+      resource.put(body, headers) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
     rescue RestClient::Exceptions::Timeout
@@ -67,17 +55,28 @@ module Bunq
       Bunq::Resource.new(client, @path + path)
     end
 
-    def ensure_session!
-      client.ensure_session!
-    end
-
     def with_session(&block)
       client.with_session(&block)
     end
 
     private
 
-    attr_reader :client
+    attr_reader :client, :path
+
+    def resource
+      RestClient::Resource.new(
+        "#{client.configuration.base_url}#{path}",
+        {
+          headers: client.headers,
+          timeout: client.configuration.timeout,
+        }.tap do |x|
+          if client.configuration.sandbox
+            x[:user] = client.configuration.sandbox_user
+            x[:password] = client.configuration.sandbox_password
+          end
+        end
+      )
+    end
 
     def bunq_request_headers(verb, params, payload = nil, headers = {})
       headers['X-Bunq-Client-Request-Id'] = SecureRandom.uuid
@@ -93,7 +92,7 @@ module Bunq
       client.signature.create(
         verb,
         encode_params(@path, params),
-        @resource.headers.merge(headers),
+        resource.headers.merge(headers),
         payload
       )
     end
@@ -117,6 +116,8 @@ module Bunq
         end
       elsif (response.code == 409 && Bunq.configuration.sandbox) || response.code == 429
         fail TooManyRequestsResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
+      elsif response.code == 401
+        fail UnauthorisedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       else
         fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       end

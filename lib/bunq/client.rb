@@ -1,5 +1,6 @@
 require 'openssl'
 require 'base64'
+require 'thread_safe'
 
 require_relative './version'
 require_relative './resource'
@@ -57,6 +58,44 @@ module Bunq
     end
   end
 
+  class NoSessionCache
+    def get(&block)
+      block.call if block_given?
+    end
+
+    def clear
+      # no-op
+    end
+  end
+
+  ##
+  # A thread-safe session cache that can hold one (the current) session.
+  #
+  # Usage:
+  #
+  # Bunq.configure do |config|
+  #   config.session_cache = Bunq::ThreadSafeSessionCache.new
+  # end
+  #
+  # After this, all +Bunq.client+ calls will use the same session. When the session times out,
+  # a new one is started automatically.
+  #
+  class ThreadSafeSessionCache
+    CACHE_KEY = 'CURRENT_BUNQ_SESSION'
+
+    def initialize
+      clear
+    end
+
+    def get(&block)
+      @cache.fetch_or_store(CACHE_KEY) { block.call if block_given? }
+    end
+
+    def clear
+      @cache = ThreadSafe::Cache.new
+    end
+  end
+
   ##
   # Configuration object for connecting to the bunq api
   #
@@ -69,6 +108,7 @@ module Bunq
     DEFAULT_GEOLOCATION = '0 0 0 0 000'
     DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}"
     DEFAULT_TIMEOUT = 60
+    DEFAULT_SESSION_CACHE = NoSessionCache.new
 
     # Base url for the bunq api. Defaults to +PRODUCTION_BASE_URL+
     attr_accessor :base_url,
@@ -101,7 +141,11 @@ module Bunq
       # The public key of this installation for verifying the response
       :server_public_key,
       # Timeout in seconds to wait for bunq api. Defaults to +DEFAULT_TIMEOUT+
-      :timeout
+      :timeout,
+      # Cache to retrieve current session from. Defaults to +DEFAULT_SESSION_CACHE+,
+      # which will create a new session per `Bunq.client` instance.
+      # See +ThreadSafeSessionCache+ for more advanced use.
+      :session_cache
 
     def initialize
       @sandbox = false
@@ -112,6 +156,7 @@ module Bunq
       @user_agent = DEFAULT_USER_AGENT
       @disable_response_signature_verification = false
       @timeout = DEFAULT_TIMEOUT
+      @session_cache = DEFAULT_SESSION_CACHE
     end
   end
 
@@ -120,7 +165,6 @@ module Bunq
   #
   # An instance of a +Client+ can be obtained via +Bunq.client+
   class Client
-
     attr_accessor :current_session
     attr_reader :configuration
 
@@ -178,12 +222,22 @@ module Bunq
     end
 
     def ensure_session!
-      @current_session ||= session_servers.create
+      @current_session ||= configuration.session_cache.get { create_session }
+    end
+
+    def create_session
+      session_servers.create
     end
 
     def with_session(&block)
+      retries ||= 0
       ensure_session!
       block.call
+    rescue UnauthorisedResponse => e
+      configuration.session_cache.clear
+      @current_session = nil
+      retry if (retries += 1) < 2
+      raise e
     end
 
     def signature
