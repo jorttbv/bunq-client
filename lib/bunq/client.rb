@@ -50,18 +50,10 @@ module Bunq
     end
 
     ##
-    # Returns either a new instance of +Client+ with the current +configuration+ or a cached +Client+,
-    # depending on the +Configuration#cache_client+ setting.
+    # Returns a new instance of +Client+ with the current +configuration+.
     #
     def client
       fail "No configuration! Call Bunq.configure first." unless configuration
-      return new_client unless configuration.cache_client
-      @cached_client ||= new_client
-    end
-
-    private
-
-    def new_client
       Client.new(configuration)
     end
   end
@@ -94,7 +86,6 @@ module Bunq
     DEFAULT_GEOLOCATION = '0 0 0 0 000'
     DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}"
     DEFAULT_TIMEOUT = 60
-    DEFAULT_CACHE_CLIENT = false
 
     # Base url for the bunq api. Defaults to +PRODUCTION_BASE_URL+
     attr_accessor :base_url,
@@ -128,8 +119,6 @@ module Bunq
       :server_public_key,
       # Timeout in seconds to wait for bunq api. Defaults to +DEFAULT_TIMEOUT+
       :timeout,
-      # Whether or not to cache client instances created by +Bunq.client+. Defaults to +DEFAULT_CACHE_CLIENT+.
-      :cache_client,
       :session_cache
 
     def initialize
@@ -141,7 +130,6 @@ module Bunq
       @user_agent = DEFAULT_USER_AGENT
       @disable_response_signature_verification = false
       @timeout = DEFAULT_TIMEOUT
-      @cache_client = DEFAULT_CACHE_CLIENT
       @session_cache = ThreadSafeSessionCache.new
     end
   end
@@ -151,6 +139,7 @@ module Bunq
   #
   # An instance of a +Client+ can be obtained via +Bunq.client+
   class Client
+
     attr_accessor :current_session
     attr_reader :configuration
 
