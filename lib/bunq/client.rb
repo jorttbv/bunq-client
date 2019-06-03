@@ -66,16 +66,6 @@ module Bunq
     end
   end
 
-  class NilSessionCache
-    def get(&block)
-      block.call
-    end
-
-    def clear
-      # no-op
-    end
-  end
-
   class ThreadSafeSessionCache
     CACHE_KEY = 'CURRENT_BUNQ_SESSION'
 
@@ -105,7 +95,6 @@ module Bunq
     DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}"
     DEFAULT_TIMEOUT = 60
     DEFAULT_CACHE_CLIENT = false
-    DEFAULT_SESSION_CACHE = NilSessionCache.new
 
     # Base url for the bunq api. Defaults to +PRODUCTION_BASE_URL+
     attr_accessor :base_url,
@@ -153,7 +142,7 @@ module Bunq
       @disable_response_signature_verification = false
       @timeout = DEFAULT_TIMEOUT
       @cache_client = DEFAULT_CACHE_CLIENT
-      @session_cache = DEFAULT_SESSION_CACHE
+      @session_cache = ThreadSafeSessionCache.new
     end
   end
 
@@ -232,6 +221,7 @@ module Bunq
       block.call
     rescue UnauthorisedResponse => e
       configuration.session_cache.clear
+      @current_session = nil
       retry if (retries += 1) < 2
       raise e
     end
