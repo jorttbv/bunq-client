@@ -142,7 +142,7 @@ module Bunq
       :server_public_key,
       # Timeout in seconds to wait for bunq api. Defaults to +DEFAULT_TIMEOUT+
       :timeout,
-      # Cache to retrieve sessions from. Defaults to +DEFAULT_SESSION_CACHE+,
+      # Cache to retrieve current session from. Defaults to +DEFAULT_SESSION_CACHE+,
       # which will create a new session per `Bunq.client` instance.
       # See +ThreadSafeSessionCache+ for more advanced use.
       :session_cache
