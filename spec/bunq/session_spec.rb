@@ -18,13 +18,19 @@ describe 'Bunq sessions' do
     end
 
     it 'creates a new session per client instance' do
-      expect(session_cache)
-        .to receive(:get)
-        .twice
-        .and_return(JSON.parse(IO.read('spec/bunq/fixtures/session_server.post.json'))['Response'])
-
+      stub_request(:post, "#{client.configuration.base_url}/v1/session-server")
+        .to_return(body: '{"Response": [{}, {"Token": {"token": "first"}}, {"UserCompany": {"id": 42}}]}')
       client.me_as_user.show
+      first_session = client.current_session
+      expect(first_session).to_not be_nil
+
+      stub_request(:post, "#{client.configuration.base_url}/v1/session-server")
+        .to_return(body: '{"Response": [{}, {"Token": {"token": "second"}}, {"UserCompany": {"id": 42}}]}')
       another_client.me_as_user.show
+      second_session = another_client.current_session
+      expect(second_session).to_not be_nil
+
+      expect(first_session).to_not eq(second_session)
     end
   end
 
