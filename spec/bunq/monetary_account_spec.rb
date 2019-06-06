@@ -31,9 +31,9 @@ describe Bunq::MonetaryAccount do
       let(:status_code) { 404 }
       let(:response) { IO.read('spec/bunq/fixtures/not-found.json') }
 
-      it 'raises a NotFound error' do
+      it 'raises a ResourceNotFound error' do
         expect { user.monetary_account(account_id).show }
-          .to raise_error(Bunq::NotFound)
+          .to raise_error(Bunq::ResourceNotFound)
       end
     end
   end
