@@ -30,4 +30,5 @@ module Bunq
   class TooManyRequestsResponse < ResponseError; end
   class UnauthorisedResponse < ResponseError; end
   class Timeout < StandardError; end
+  class NotFound < StandardError; end
 end

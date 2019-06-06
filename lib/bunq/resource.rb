@@ -118,6 +118,8 @@ module Bunq
         fail TooManyRequestsResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       elsif response.code == 401
         fail UnauthorisedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
+      elsif response.code == 404
+        fail NotFound.new(code: response.code, headers: response.raw_headers, body: response.body)
       else
         fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       end
