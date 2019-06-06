@@ -29,6 +29,6 @@ module Bunq
   class AbsentResponseSignature < ResponseError; end
   class TooManyRequestsResponse < ResponseError; end
   class UnauthorisedResponse < ResponseError; end
+  class NotFound < ResponseError; end
   class Timeout < StandardError; end
-  class NotFound < StandardError; end
 end
