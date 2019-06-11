@@ -54,7 +54,7 @@ module Bunq
     #
     def client
       fail "No configuration! Call Bunq.configure first." unless configuration
-      Client.new(configuration)
+      Client.new(configuration.dup)
     end
   end
 
@@ -219,6 +219,10 @@ module Bunq
     # Returns the +Bunq::User+ represented by the +Bunq::Configuration.api_key+
     def me_as_user
       with_session { user(current_session_user_id) }
+    end
+
+    def with_local_config
+      yield(configuration.dup)
     end
 
     def ensure_session!

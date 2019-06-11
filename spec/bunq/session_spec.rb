@@ -5,12 +5,18 @@ describe 'Bunq sessions' do
   let(:another_client) { Bunq.client }
 
   before do
+    Bunq.configure do |config|
+      config.session_cache = session_cache
+    end
+  end
+
+  before do
     stub_request(:get, "#{client.configuration.base_url}/v1/user/42")
       .to_return(body: IO.read('spec/bunq/fixtures/user.get.json'))
   end
 
   context 'given the default session cache' do
-    let(:session_cache) { client.configuration.session_cache }
+    let(:session_cache) { Bunq::NoSessionCache.new }
 
     before do
       stub_request(:post, "#{client.configuration.base_url}/v1/session-server")
@@ -38,23 +44,17 @@ describe 'Bunq sessions' do
     let(:session_cache) { Bunq::ThreadSafeSessionCache.new }
 
     before do
-      Bunq.configure do |config|
-        config.session_cache = session_cache
-      end
-    end
-
-    before do
       stub_request(:post, "#{client.configuration.base_url}/v1/session-server")
         .to_return(body: IO.read('spec/bunq/fixtures/session_server.post.json'))
     end
 
     it 'shares the session from the cache between client instances' do
       client.me_as_user.show
-      first_session = session_cache.get
+      first_session = client.configuration.session_cache.get
       expect(first_session).to_not be_nil
 
       another_client.me_as_user.show
-      second_session = session_cache.get
+      second_session = another_client.configuration.session_cache.get
       expect(second_session).to_not be_nil
 
       expect(first_session).to eq(second_session)
@@ -68,7 +68,7 @@ describe 'Bunq sessions' do
 
       it 'clears the session from the cache' do
         expect { client.me_as_user.show }.to raise_error(Bunq::UnauthorisedResponse)
-        expect(session_cache.get).to be_nil
+        expect(client.configuration.session_cache.get).to be_nil
       end
 
       context 'and another client performs a call' do
