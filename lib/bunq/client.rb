@@ -221,6 +221,10 @@ module Bunq
       with_session { user(current_session_user_id) }
     end
 
+    def with_local_config
+      yield(configuration.dup)
+    end
+
     def ensure_session!
       @current_session ||= configuration.session_cache.get { create_session }
     end
