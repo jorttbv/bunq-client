@@ -54,7 +54,7 @@ module Bunq
     #
     def client
       fail "No configuration! Call Bunq.configure first." unless configuration
-      Client.new(configuration)
+      Client.new(configuration.dup)
     end
   end
 
