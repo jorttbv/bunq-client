@@ -10,7 +10,7 @@ module Bunq
 
     def paginate(count: 200, older_id: nil, newer_id: nil)
       params = setup_params(count, older_id, newer_id)
-      @resource.with_session { enumerator(params) }
+      enumerator(params)
     end
 
     private
@@ -32,7 +32,7 @@ module Bunq
         loop do
           raise StopIteration if last_page
 
-          result = @resource.get(next_params)
+          result = @resource.with_session { @resource.get(next_params) }
           result['Response'].each do |item|
             yielder << item
           end
