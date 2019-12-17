@@ -6,6 +6,7 @@ require_relative 'draft_share_invite_banks'
 require_relative 'certificate_pinned'
 require_relative 'card'
 require_relative 'cards'
+require_relative 'notification_filter_url'
 
 module Bunq
   class User
@@ -39,6 +40,10 @@ module Bunq
 
     def cards
       Bunq::Cards.new(@resource)
+    end
+
+    def notification_filter_url
+      Bunq::NotificationFilterUrl.new(@resource)
     end
 
     def show

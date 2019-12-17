@@ -1,3 +1,5 @@
+require_relative 'notification_filter_url'
+
 module Bunq
   ##
   # https://doc.bunq.com/api/1/call/monetary-account
@@ -18,6 +20,10 @@ module Bunq
     # https://doc.bunq.com/api/1/call/monetary-account/method/get
     def show
       @resource.with_session { @resource.get }['Response']
+    end
+
+    def notification_filter_url
+      Bunq::NotificationFilterUrl.new(@resource)
     end
   end
 end
