@@ -99,9 +99,8 @@ Bunq.configure do |config|
   cofig.installation_token = 'THE INSTALLATION TOKEN RETURNED IN STEP 1'
 end
 
-Bunq.client.me_as_user_company.update(
-  notification_filters: [{
-    "notification_delivery_method": "URL",
+Bunq.client.me_as_user.notification_filter_url.create(
+  [{
     "notification_target": 'https://YOUR_CALLBACK_URL',
     "category": "PAYMENT"
   }]
