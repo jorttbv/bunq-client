@@ -8,7 +8,7 @@ module Bunq
       @code = code
       @headers = headers || {}
       @body = body
-      super("#{msg}: #{body}")
+      super("#{msg} (code: #{code}, body: #{body})")
     end
 
     # Returns the parsed body if it is a JSON document, nil otherwise.
@@ -31,4 +31,5 @@ module Bunq
   class UnauthorisedResponse < ResponseError; end
   class ResourceNotFound < ResponseError; end
   class Timeout < StandardError; end
+  class MaintenanceResponse < ResponseError; end
 end

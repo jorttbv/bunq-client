@@ -20,6 +20,12 @@ describe Bunq::ResponseError do
         expect(errors).to eq("foo")
       end
     end
+
+    describe '#message' do
+      it 'returns a human readable message' do
+        expect(error.message).to eq('Response error (code: 400, body: {"Error": "foo"})')
+      end
+    end
   end
 
   context 'without a JSON body' do
@@ -38,6 +44,12 @@ describe Bunq::ResponseError do
       it 'returns nil' do
         errors = error.errors
         expect(errors).to eq(nil)
+      end
+    end
+
+    describe '#message' do
+      it 'returns a human readable message' do
+        expect(error.message).to eq('Response error (code: 400, body: )')
       end
     end
   end
