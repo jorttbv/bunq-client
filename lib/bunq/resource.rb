@@ -103,7 +103,7 @@ module Bunq
     end
 
     def verify_and_handle_response(response, request, result, &block)
-      handle_maintenance(response) if response.code == 491 || 503
+      handle_maintenance(response) if [491, 503].include?(response.code)
       client.signature.verify!(response) unless client.configuration.disable_response_signature_verification
       handle_response(response, request, result, &block)
     end
