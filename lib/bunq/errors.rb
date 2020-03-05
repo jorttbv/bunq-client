@@ -31,4 +31,5 @@ module Bunq
   class UnauthorisedResponse < ResponseError; end
   class ResourceNotFound < ResponseError; end
   class Timeout < StandardError; end
+  class MaintenanceResponse < ResponseError; end
 end

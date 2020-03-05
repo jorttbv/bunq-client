@@ -64,4 +64,38 @@ describe Bunq::Resource do
       expect { resource.get({}) }.to raise_error(Bunq::UnauthorisedResponse)
     end
   end
+
+  describe 'given a maintenance response' do
+    let(:maintenance_html) do
+      <<~HTML
+        <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+        <html><head>
+        <title>503 Service Unavailable</title>
+        </head><body>
+        <h1>Service Unavailable</h1>
+        <p>The server is temporarily unable to service your
+        request due to maintenance downtime or capacity
+        problems. Please try again later.</p>
+        </body></html>
+      HTML
+    end
+
+    context 'and status code 491' do
+      it 'raises a Bunq::MaintenanceResponse' do
+        stub_request(:get, "#{url}/resource")
+          .to_return(status: 491, body: maintenance_html)
+
+        expect { resource.get({}) }.to raise_error(Bunq::MaintenanceResponse)
+      end
+    end
+
+    context 'and status code 503' do
+      it 'raises a Bunq::MaintenanceResponse' do
+        stub_request(:get, "#{url}/resource")
+          .to_return(status: 503, body: maintenance_html)
+
+        expect { resource.get({}) }.to raise_error(Bunq::MaintenanceResponse)
+      end
+    end
+  end
 end
