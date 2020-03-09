@@ -23,9 +23,6 @@ module Bunq
     def verify!(response)
       return if skip_signature_check(response.code)
 
-      sorted_bunq_headers = response.raw_headers.select(&method(:verifiable_header?)).sort.to_h.map { |k, v| "#{k.to_s.split('-').map(&:capitalize).join('-')}: #{v.first}" }
-      data = %Q{#{response.code}\n#{sorted_bunq_headers.join("\n")}\n\n#{response.body}}
-
       signature_headers = response.raw_headers.find { |k, _| k.to_s.downcase == BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER }
       fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers
 
@@ -33,7 +30,7 @@ module Bunq
       fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers_value
 
       signature = Base64.strict_decode64(signature_headers_value.first)
-      fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body) unless server_public_key.verify(digest, signature, data)
+      fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body) unless server_public_key.verify(digest, signature, response.body)
     end
 
     private
