@@ -24,13 +24,19 @@ module Bunq
       return if skip_signature_check(response.code)
 
       signature_headers = response.raw_headers.find { |k, _| k.to_s.downcase == BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER }
-      fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers
+      unless signature_headers
+        fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body)
+      end
 
       signature_headers_value = signature_headers[1]
-      fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers_value
+      unless signature_headers_value
+        fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body)
+      end
 
       signature = Base64.strict_decode64(signature_headers_value.first)
-      fail RequestSignatureRequired.new(code: response.code, headers: response.raw_headers, body: response.body) unless server_public_key.verify(digest, signature, response.body)
+      unless server_public_key.verify(digest, signature, response.body)
+        fail RequestSignatureRequired.new(code: response.code, headers: response.raw_headers, body: response.body)
+      end
     end
 
     private
