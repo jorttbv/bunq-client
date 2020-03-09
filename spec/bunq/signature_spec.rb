@@ -2,59 +2,19 @@ require 'spec_helper'
 
 describe Bunq::Signature do
   context do
-    let(:verb) { 'GET' }
-    let(:path) { '/' }
-    let(:signable_headers) do
-      {
-        'Cache-Control': 'no-cache',
-        'User-Agent': 'bunq-TestServer/1.00 sandbox/0.17b3',
-        'X-Bunq-Client-Authentication': 'f15f1bbe1feba25efb00802fa127042b54101c8ec0a524c36464f5bb143d3b8b',
-        'X-Bunq-Client-Request-Id': '57061b04b67ef',
-        'X-Bunq-Geolocation': '0 0 0 0 NL',
-        'X-Bunq-Language': 'en_US',
-        'X-Bunq-Region': 'en_US',
-      }
-    end
-    let(:headers) { signable_headers }
     let(:body) { '{"amount": 10}' }
 
-    subject { Bunq.client.signature.create(verb, path, headers, body) }
+    subject { Bunq.client.signature.create(body) }
 
     let(:expected_signature) do
-      'o5AXc4Ag72GzfzXwDbvlEck3SnrEILHVjmc6wJhjZVGn+rtPmAilCKQiSvneo2VbjwuP2vHJdZEQk4NF/1PmrVByUjdmCF/' \
-      'c9y5LP/w4+SgZMoyu6DfzDtoVRMMFM0tC4MPVaAZ8//vniQEaR7EK3RBL5Nh4dUnA3UVQ972SbTl+Huof5XknUlONOpzSU+' \
-      'ms3VIj8FmogzfRmjnJoDUvfwxY+5mRhQDi9wD+nAXPUo2yT2OL1by/RkE5bfLlBbZXmUwXYMQ8IHAF7Rnow8aBY7FCjl8Ye' \
-      'Sulw58bPOb9HJJM3lk0ZaPisN/S1HbwQ9LcRLX0SdSuKlvnu2U/uZv8AA=='
+      'qB/d2z/78SxyOXDOLHVgoalmcINnDggiGlMLyh5Kf/pDkG9Qs2JCSk/QjOwGQ/h4b0K6MWA4OLVrmzIUbbF++/sYNs+sEK4PVOUATKMOjShWn' \
+      'Z4NHUU9HqoS3ruAdV6XU5LFjvpqsUQ/egXAGzFlUgPaq4g2t8P8hQHKH9C2SJjCOLAt07VleaiQRlPdyyEmmNMfxbp4bFe3EP62ILFz4t/4ox' \
+      'ZRDchXWAAAUT6DnIiXuimBNRebi0Nsk32IIdieDeOcjrppIx2BIN0jNLULzLbiE9hsV9XwjNMYU6+SCQDQMLweRXgggB8wPJBK9sApdSdhkmS' \
+      'ZeNE1sOdRG12F+g=='
     end
 
     it 'can be created from an HTTP request' do
       expect(subject).to eq(expected_signature)
-    end
-
-    context 'given a header other than Cache-Control, User-Agent and X-Bunq-*' do
-      let(:headers) { signable_headers.merge('Accept': '*/*', 'Content-Type': 'application/json') }
-
-      it 'omits that header from the signature ' do
-        expect(subject).to eq(expected_signature)
-      end
-    end
-
-    context 'given a different HTTP verb' do
-      let(:verb) { 'POST' }
-
-      it 'creates a different signature' do
-        expect(subject).to_not be_nil
-        expect(subject).to_not eq(expected_signature)
-      end
-    end
-
-    context 'given a different HTTP path' do
-      let(:path) { '/installation' }
-
-      it 'creates a different signature' do
-        expect(subject).to_not be_nil
-        expect(subject).to_not eq(expected_signature)
-      end
     end
 
     context 'given a different HTTP body' do

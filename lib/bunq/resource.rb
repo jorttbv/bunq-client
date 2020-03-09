@@ -89,12 +89,7 @@ module Bunq
     end
 
     def sign_request(verb, params, headers, payload = nil)
-      client.signature.create(
-        verb,
-        encode_params(@path, params),
-        resource.headers.merge(headers),
-        payload
-      )
+      client.signature.create(payload)
     end
 
     def encode_params(path, params)

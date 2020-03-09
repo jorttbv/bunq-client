@@ -5,9 +5,6 @@ module Bunq
     # headers in raw_headers hash in rest client are all lower case
     BUNQ_HEADER_PREFIX = 'X-Bunq-'.downcase
     BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER = 'X-Bunq-Server-Signature'.downcase
-    CACHE_CONTROL_HEADER = 'Cache-Control'.downcase
-    USER_AGENT_HEADER = 'User-Agent'.downcase
-    SIGNABLE_HEADERS = [CACHE_CONTROL_HEADER, USER_AGENT_HEADER]
 
     def initialize(private_key, server_public_key)
       fail ArgumentError.new('private_key is mandatory') unless private_key
@@ -17,11 +14,8 @@ module Bunq
       @server_public_key = OpenSSL::PKey::RSA.new(server_public_key)
     end
 
-    def create(verb, path, headers, body)
-      signature = private_key.sign(
-        digest,
-        signable_input(verb, path, headers.select { |header_name, _| signable_header?(header_name) }, body)
-      )
+    def create(body)
+      signature = private_key.sign(digest, body.to_s)
 
       Base64.strict_encode64(signature)
     end
@@ -48,20 +42,6 @@ module Bunq
 
     def digest
       OpenSSL::Digest::SHA256.new
-    end
-
-    def signable_input(verb, path, headers, body)
-      sortable_headers = Hash[headers.collect{ |k,v| [k.to_s, v] }]
-      head = [
-        [verb, path].join(' '),
-        sortable_headers.sort.to_h.map { |k,v| "#{k}: #{v}" }.join("\n")
-      ].join("\n")
-      "#{head}\n\n#{body}"
-    end
-
-    def signable_header?(header_name)
-      _header_name = header_name.to_s.downcase
-      SIGNABLE_HEADERS.include?(_header_name) || _header_name.start_with?(BUNQ_HEADER_PREFIX)
     end
 
     def verifiable_header?(header_name, _)
