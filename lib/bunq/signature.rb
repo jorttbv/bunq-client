@@ -5,9 +5,6 @@ module Bunq
     # headers in raw_headers hash in rest client are all lower case
     BUNQ_HEADER_PREFIX = 'X-Bunq-'.downcase
     BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER = 'X-Bunq-Server-Signature'.downcase
-    CACHE_CONTROL_HEADER = 'Cache-Control'.downcase
-    USER_AGENT_HEADER = 'User-Agent'.downcase
-    SIGNABLE_HEADERS = [CACHE_CONTROL_HEADER, USER_AGENT_HEADER]
 
     def initialize(private_key, server_public_key)
       fail ArgumentError.new('private_key is mandatory') unless private_key
@@ -17,11 +14,8 @@ module Bunq
       @server_public_key = OpenSSL::PKey::RSA.new(server_public_key)
     end
 
-    def create(verb, path, headers, body)
-      signature = private_key.sign(
-        digest,
-        signable_input(verb, path, headers.select { |header_name, _| signable_header?(header_name) }, body)
-      )
+    def create(body)
+      signature = private_key.sign(digest, body.to_s)
 
       Base64.strict_encode64(signature)
     end
@@ -29,17 +23,20 @@ module Bunq
     def verify!(response)
       return if skip_signature_check(response.code)
 
-      sorted_bunq_headers = response.raw_headers.select(&method(:verifiable_header?)).sort.to_h.map { |k, v| "#{k.to_s.split('-').map(&:capitalize).join('-')}: #{v.first}" }
-      data = %Q{#{response.code}\n#{sorted_bunq_headers.join("\n")}\n\n#{response.body}}
-
       signature_headers = response.raw_headers.find { |k, _| k.to_s.downcase == BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER }
-      fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers
+      unless signature_headers
+        fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body)
+      end
 
       signature_headers_value = signature_headers[1]
-      fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers_value
+      unless signature_headers_value
+        fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body)
+      end
 
       signature = Base64.strict_decode64(signature_headers_value.first)
-      fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body) unless server_public_key.verify(digest, signature, data)
+      unless server_public_key.verify(digest, signature, response.body)
+        fail RequestSignatureRequired.new(code: response.code, headers: response.raw_headers, body: response.body)
+      end
     end
 
     private
@@ -48,20 +45,6 @@ module Bunq
 
     def digest
       OpenSSL::Digest::SHA256.new
-    end
-
-    def signable_input(verb, path, headers, body)
-      sortable_headers = Hash[headers.collect{ |k,v| [k.to_s, v] }]
-      head = [
-        [verb, path].join(' '),
-        sortable_headers.sort.to_h.map { |k,v| "#{k}: #{v}" }.join("\n")
-      ].join("\n")
-      "#{head}\n\n#{body}"
-    end
-
-    def signable_header?(header_name)
-      _header_name = header_name.to_s.downcase
-      SIGNABLE_HEADERS.include?(_header_name) || _header_name.start_with?(BUNQ_HEADER_PREFIX)
     end
 
     def verifiable_header?(header_name, _)
