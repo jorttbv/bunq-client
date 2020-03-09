@@ -77,7 +77,7 @@ describe Bunq::Signature do
       let(:body) { '{"Response":[{"Id":{"id":TAMPERED}}]}' }
 
       it 'fails' do
-        expect { subject }.to raise_error(Bunq::UnexpectedResponse)
+        expect { subject }.to raise_error(Bunq::RequestSignatureRequired)
       end
     end
 

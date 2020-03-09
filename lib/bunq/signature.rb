@@ -30,7 +30,7 @@ module Bunq
       fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body) unless signature_headers_value
 
       signature = Base64.strict_decode64(signature_headers_value.first)
-      fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body) unless server_public_key.verify(digest, signature, response.body)
+      fail RequestSignatureRequired.new(code: response.code, headers: response.raw_headers, body: response.body) unless server_public_key.verify(digest, signature, response.body)
     end
 
     private
