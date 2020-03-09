@@ -43,7 +43,7 @@ describe Bunq::Signature do
   describe 'response verification' do
     let(:server_private_key) { OpenSSL::PKey::RSA.new(IO.read('spec/bunq/fixtures/server-test-private.pem')) }
     let(:signable_response) do
-      "{\"Response\":[{\"Id\":{\"id\":1561}}]}"
+      "200\n{\"Response\":[{\"Id\":{\"id\":1561}}]}"
     end
     let(:server_signature) do
       Base64.strict_encode64(
@@ -58,12 +58,13 @@ describe Bunq::Signature do
         :'X-Bunq-Server-Response-Id' => ['89dcaa5c-fa55-4068-9822-3f87985d2268'],
       }
     end
+    let(:code) { 200 }
     let(:body) { '{"Response":[{"Id":{"id":1561}}]}' }
 
     let(:response) do
       double(
         raw_headers: headers,
-        code: 200,
+        code: code,
         body: body
       )
     end

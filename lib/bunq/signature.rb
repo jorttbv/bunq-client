@@ -34,7 +34,7 @@ module Bunq
       end
 
       signature = Base64.strict_decode64(signature_headers_value.first)
-      unless server_public_key.verify(digest, signature, response.body)
+      unless server_public_key.verify(digest, signature, "#{response.code}\n#{response.body}")
         fail RequestSignatureRequired.new(code: response.code, headers: response.raw_headers, body: response.body)
       end
     end
