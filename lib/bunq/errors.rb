@@ -26,7 +26,7 @@ module Bunq
   end
 
   class UnexpectedResponse < ResponseError; end
-  class RequestSignatureRequired < ResponseError; end
+  class InvalidResponseSignature < ResponseError; end
   class AbsentResponseSignature < ResponseError; end
   class TooManyRequestsResponse < ResponseError; end
   class UnauthorisedResponse < ResponseError; end

@@ -42,9 +42,6 @@ describe Bunq::Signature do
 
   describe 'response verification' do
     let(:server_private_key) { OpenSSL::PKey::RSA.new(IO.read('spec/bunq/fixtures/server-test-private.pem')) }
-    let(:signable_response) do
-      "200\n{\"Response\":[{\"Id\":{\"id\":1561}}]}"
-    end
     let(:server_signature) do
       Base64.strict_encode64(
         server_private_key.sign(OpenSSL::Digest::SHA256.new, signable_response)
@@ -70,31 +67,51 @@ describe Bunq::Signature do
     end
     subject { Bunq.client.signature.verify!(response) }
 
-    it 'does not raise an error' do
-      expect { subject }.to_not raise_error
-    end
+    context 'given the response code, headers & body are signed' do
+      let(:signable_response) do
+        "200\n" \
+        "X-Bunq-Client-Request-Id: 57061b04b67ef\n" \
+        "X-Bunq-Server-Response-Id: 89dcaa5c-fa55-4068-9822-3f87985d2268\n" \
+        "\n" \
+        "{\"Response\":[{\"Id\":{\"id\":1561}}]}"
+      end
 
-    context 'given a tampered response' do
-      let(:body) { '{"Response":[{"Id":{"id":TAMPERED}}]}' }
+      it 'verifies that response successfully' do
+        expect { subject }.to_not raise_error
+      end
 
-      it 'fails' do
-        expect { subject }.to raise_error(Bunq::RequestSignatureRequired)
+      context 'and a tampered response' do
+        let(:code) { 404 }
+
+        it 'fails' do
+          expect { subject }.to raise_error(Bunq::InvalidResponseSignature)
+        end
+      end
+
+      context 'and an absent server signature' do
+        let(:headers) { {} }
+
+        it 'fails' do
+          expect { subject }.to raise_error(Bunq::AbsentResponseSignature)
+        end
+      end
+
+      context 'and a server signature that is nil' do
+        let(:headers) { {:'X-Bunq-Server-Signature' => nil} }
+
+        it 'fails' do
+          expect { subject }.to raise_error(Bunq::AbsentResponseSignature)
+        end
       end
     end
 
-    context 'given an absent server signature' do
-      let(:headers) { {} }
-
-      it 'fails' do
-        expect { subject }.to raise_error(Bunq::AbsentResponseSignature)
+    context 'given only the response body is signed' do
+      let(:signable_response) do
+        "{\"Response\":[{\"Id\":{\"id\":1561}}]}"
       end
-    end
 
-    context 'given a server signature that is nil' do
-      let(:headers) { {:'X-Bunq-Server-Signature' => nil} }
-
-      it 'fails' do
-        expect { subject }.to raise_error(Bunq::AbsentResponseSignature)
+      it 'verifies that response successfully' do
+        expect { subject }.to_not raise_error
       end
     end
   end
