@@ -23,6 +23,17 @@ module Bunq
     def verify!(response)
       return if skip_signature_check(response.code)
 
+      sorted_bunq_headers = response
+        .raw_headers
+        .select(&method(:verifiable_header?))
+        .sort
+        .to_h
+        .map do |k, v|
+          "#{k.to_s.split('-').map(&:capitalize).join('-')}: #{v.first}"
+        end
+
+      data = %Q{#{response.code}\n#{sorted_bunq_headers.join("\n")}\n\n#{response.body}}
+
       signature_headers = response.raw_headers.find { |k, _| k.to_s.downcase == BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER }
       unless signature_headers
         fail AbsentResponseSignature.new(code: response.code, headers: response.raw_headers, body: response.body)
@@ -34,7 +45,7 @@ module Bunq
       end
 
       signature = Base64.strict_decode64(signature_headers_value.first)
-      unless server_public_key.verify(digest, signature, "#{response.code}\n#{response.body}")
+      unless server_public_key.verify(digest, signature, data)
         fail RequestSignatureRequired.new(code: response.code, headers: response.raw_headers, body: response.body)
       end
     end

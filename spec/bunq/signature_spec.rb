@@ -43,7 +43,11 @@ describe Bunq::Signature do
   describe 'response verification' do
     let(:server_private_key) { OpenSSL::PKey::RSA.new(IO.read('spec/bunq/fixtures/server-test-private.pem')) }
     let(:signable_response) do
-      "200\n{\"Response\":[{\"Id\":{\"id\":1561}}]}"
+      "200\n" \
+      "X-Bunq-Client-Request-Id: 57061b04b67ef\n" \
+      "X-Bunq-Server-Response-Id: 89dcaa5c-fa55-4068-9822-3f87985d2268\n" \
+      "\n" \
+      "{\"Response\":[{\"Id\":{\"id\":1561}}]}"
     end
     let(:server_signature) do
       Base64.strict_encode64(
@@ -75,7 +79,7 @@ describe Bunq::Signature do
     end
 
     context 'given a tampered response' do
-      let(:body) { '{"Response":[{"Id":{"id":TAMPERED}}]}' }
+      let(:code) { 404 }
 
       it 'fails' do
         expect { subject }.to raise_error(Bunq::RequestSignatureRequired)
