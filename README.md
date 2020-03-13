@@ -40,7 +40,7 @@ Bunq.configure do |config|
   config.api_key = 'YOUR API KEY'
   config.private_key = private_key
   config.server_public_key = nil # you don't have this yet
-  cofig.installation_token = nil # this MUST be nil for creating installations
+  config.installation_token = nil # this MUST be nil for creating installations
 end
 
 # Create the installation
@@ -66,7 +66,7 @@ Bunq.configure do |config|
   config.private_key = 'SAME PRIVATE KEY AS IN STEP 1'
   # Used for response verification
   config.server_public_key = 'THE CONTENTS OF THE PUBLIC KEY FILE RETURNED IN STEP 1'
-  cofig.installation_token = 'THE INSTALLATION TOKEN RETURNED IN STEP 1'
+  config.installation_token = 'THE INSTALLATION TOKEN RETURNED IN STEP 1'
 end
 
 response = Bunq.client.device_servers.create('My Laptop')
@@ -81,7 +81,7 @@ Bunq.configure do |config|
   config.private_key = 'SAME PRIVATE KEY AS IN STEP 1'
   # Used for response verification
   config.server_public_key = 'THE CONTENTS OF THE PUBLIC KEY FILE RETURNED IN STEP 1'
-  cofig.installation_token = 'THE INSTALLATION TOKEN RETURNED IN STEP 1'
+  config.installation_token = 'THE INSTALLATION TOKEN RETURNED IN STEP 1'
 end
 
 certificate_of_you_callback_url = IO.read('path_to_pem_file')
@@ -96,7 +96,7 @@ Bunq.configure do |config|
   config.private_key = 'SAME PRIVATE KEY AS IN STEP 1'
   # Used for response verification
   config.server_public_key = 'THE CONTENTS OF THE PUBLIC KEY FILE RETURNED IN STEP 1'
-  cofig.installation_token = 'THE INSTALLATION TOKEN RETURNED IN STEP 1'
+  config.installation_token = 'THE INSTALLATION TOKEN RETURNED IN STEP 1'
 end
 
 Bunq.client.me_as_user.notification_filter_url.create(
