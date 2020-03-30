@@ -109,6 +109,8 @@ module Bunq
 
     def verify_response_signature?(response)
       return false if client.configuration.disable_response_signature_verification
+
+      (100..499).include?(response.code)
     end
 
     def handle_response(response, _request, _result, &block)
