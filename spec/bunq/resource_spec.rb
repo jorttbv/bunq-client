@@ -65,6 +65,15 @@ describe Bunq::Resource do
     end
   end
 
+  describe 'given a response with status code 403 Forbidden' do
+    it 'raises a Bunq::UnauthorisedResponse' do
+      stub_request(:get, "#{url}/resource")
+        .to_return({ status: 403 })
+
+      expect { resource.get({}) }.to raise_error(Bunq::UnauthorisedResponse)
+    end
+  end
+
   describe 'given a maintenance response' do
     let(:maintenance_html) do
       <<~HTML
