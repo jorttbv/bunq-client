@@ -98,4 +98,30 @@ describe Bunq::Resource do
       end
     end
   end
+
+  describe 'given a bad gateway response' do
+    let(:bad_gateway_html) do
+      <<~HTML
+        <html>
+        <head><title>502 Bad Gateway</title></head>
+        <body bgcolor="white">
+        <center><h1>502 Bad Gateway</h1></center>
+        </body>
+        </html>
+      HTML
+    end
+
+    before do
+      Bunq.configure do |c|
+        c.disable_response_signature_verification = false
+      end
+    end
+
+    it 'raises a Bunq::UnexpectedResponse' do
+      stub_request(:get, "#{url}/resource")
+        .to_return(status: 502, body: bad_gateway_html)
+
+      expect { resource.get({}) }.to raise_error(Bunq::UnexpectedResponse)
+    end
+  end
 end

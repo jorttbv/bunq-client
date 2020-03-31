@@ -98,13 +98,15 @@ module Bunq
     end
 
     def verify_and_handle_response(response, request, result, &block)
-      handle_maintenance(response) if [491, 503].include?(response.code)
-      client.signature.verify!(response) unless client.configuration.disable_response_signature_verification
+      client.signature.verify!(response) if verify_response_signature?(response)
       handle_response(response, request, result, &block)
     end
 
-    def handle_maintenance(response)
-      fail MaintenanceResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
+    def verify_response_signature?(response)
+      return false if client.configuration.disable_response_signature_verification
+      return false if response.code == 491
+
+      (100..499).include?(response.code)
     end
 
     def handle_response(response, _request, _result, &block)
@@ -120,6 +122,8 @@ module Bunq
         fail UnauthorisedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       elsif response.code == 404
         fail ResourceNotFound.new(code: response.code, headers: response.raw_headers, body: response.body)
+      elsif [491, 503].include?(response.code)
+        fail MaintenanceResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       else
         fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       end
