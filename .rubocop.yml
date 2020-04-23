@@ -1,0 +1,187 @@
+# The behavior of RuboCop can be controlled via the .rubocop.yml
+# configuration file. It makes it possible to enable/disable
+# certain cops (checks) and to alter their behavior if they accept
+# any parameters. The file can be placed either in your home
+# directory or in some project directory.
+#
+# RuboCop will start looking for the configuration file in the directory
+# where the inspected file is and continue its way up to the root directory.
+#
+# See https://github.com/rubocop-hq/rubocop/blob/master/manual/configuration.md
+
+##
+# General styles
+##
+Style/Documentation:
+  Enabled: false # Code should be self-documenting
+
+Style/AsciiComments:
+  Enabled: false # We have no issues with non-ascii characters in comments
+
+Style/GuardClause:
+  Enabled: false # Can lead to strange constructions
+
+Style/EachWithObject:
+  Enabled: false # We prefer/are used to using reduce
+
+Style/NumericPredicate:
+  Enabled: false # Using .zero? can lead to 'Undefined method x for nil'
+
+Style/MultilineBlockChain:
+  Enabled: false # Acceptable
+
+Style/DoubleNegation:
+  Enabled: false # Usable 'hack'
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/SignalException:
+  EnforcedStyle: semantic
+
+Style/FormatStringToken:
+  EnforcedStyle: unannotated
+
+##
+# Metrics (all disabled; we have our own opinion on this)
+##
+Layout/LineLength:
+  Enabled: true
+  Max: 120
+  AutoCorrect: true
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+##
+# Trailing comma's
+##
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+##
+# Naming things
+##
+Naming/AccessorMethodName:
+  Enabled: false # We have our own opinion on this
+
+Naming/PredicateName:
+  Enabled: false # We have our own opinion on this
+
+Naming/VariableNumber:
+  Enabled: false # We have our own opinion on this
+
+Naming/HeredocDelimiterNaming:
+  Enabled: false # We have our own opinion on this
+
+##
+# Lint
+Lint/SuppressedException:
+  AllowComments: true
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
+Lint/NestedMethodDefinition:
+  Enabled: true
+
+##
+# Layout
+##
+Layout/ExtraSpacing:
+  Enabled: true
+  AllowForAlignment: false
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
+##
+# Multi-line formatting (hashes)
+##
+Layout/FirstHashElementLineBreak:
+  Enabled: true
+
+Layout/FirstHashElementIndentation:
+  Enabled: true
+  EnforcedStyle: consistent
+
+Layout/MultilineHashBraceLayout:
+  Enabled: true
+  EnforcedStyle: new_line
+
+Layout/MultilineHashKeyLineBreaks:
+  Enabled: true
+
+##
+# Multi-line formatting (array)
+##
+Layout/FirstArrayElementLineBreak:
+  Enabled: true
+
+Layout/FirstArrayElementIndentation:
+  Enabled: true
+  EnforcedStyle: consistent
+
+Layout/MultilineArrayBraceLayout:
+  Enabled: true
+  EnforcedStyle: new_line
+
+Layout/MultilineArrayLineBreaks:
+  Enabled: true
+
+##
+# Multi-line formatting (methods/arguments)
+##
+Layout/FirstMethodArgumentLineBreak:
+  Enabled: true
+
+Layout/FirstArgumentIndentation:
+  Enabled: true
+  EnforcedStyle: consistent
+
+Layout/FirstParameterIndentation:
+  Enabled: true
+  EnforcedStyle: consistent
+
+Layout/MultilineMethodCallBraceLayout:
+  Enabled: true
+  EnforcedStyle: new_line
+
+Layout/MultilineMethodArgumentLineBreaks:
+  Enabled: true
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented
