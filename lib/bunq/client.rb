@@ -84,7 +84,7 @@ module Bunq
   # a new one is started automatically.
   #
   class ThreadSafeSessionCache
-    CACHE_KEY = 'CURRENT_BUNQ_SESSION'.freeze
+    CACHE_KEY = 'CURRENT_BUNQ_SESSION'
 
     def initialize
       clear
@@ -103,13 +103,13 @@ module Bunq
   # Configuration object for connecting to the bunq api
   #
   class Configuration
-    SANDBOX_BASE_URL = 'https://public-api.sandbox.bunq.com'.freeze
-    PRODUCTION_BASE_URL = 'https://api.bunq.com'.freeze
+    SANDBOX_BASE_URL = 'https://public-api.sandbox.bunq.com'
+    PRODUCTION_BASE_URL = 'https://api.bunq.com'
 
-    DEFAULT_LANGUAGE = 'nl_NL'.freeze
-    DEFAULT_REGION = 'nl_NL'.freeze
-    DEFAULT_GEOLOCATION = '0 0 0 0 000'.freeze
-    DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}".freeze
+    DEFAULT_LANGUAGE = 'nl_NL'
+    DEFAULT_REGION = 'nl_NL'
+    DEFAULT_GEOLOCATION = '0 0 0 0 000'
+    DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}"
     DEFAULT_TIMEOUT = 60
     DEFAULT_SESSION_CACHE = NoSessionCache.new
 
@@ -230,7 +230,7 @@ module Bunq
     end
 
     def ensure_session!
-      @current_session ||= configuration.session_cache.get { create_session }
+      @current_session ||= configuration.session_cache.get { create_session } # rubocop:disable Naming/MemoizedInstanceVariableName
     end
 
     def create_session

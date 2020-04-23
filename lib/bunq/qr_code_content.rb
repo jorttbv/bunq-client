@@ -8,7 +8,7 @@ module Bunq
 
     def show
       @resource.with_session do
-        @resource.get { |response| response.body }
+        @resource.get(&:body)
       end
     end
   end

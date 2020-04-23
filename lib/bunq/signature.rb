@@ -50,12 +50,12 @@ module Bunq
     end
 
     def verifiable_header?(header_name, _)
-      _header_name = header_name.to_s.downcase
-      _header_name.start_with?(BUNQ_HEADER_PREFIX) && _header_name != BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER
+      the_header_name = header_name.to_s.downcase
+      the_header_name.start_with?(BUNQ_HEADER_PREFIX) && the_header_name != BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER
     end
 
-    def skip_signature_check(responseCode)
-      (Bunq.configuration.sandbox && responseCode == 409) || responseCode == 429
+    def skip_signature_check(response_code)
+      (Bunq.configuration.sandbox && response_code == 409) || response_code == 429
     end
 
     def verify_legacy(signature, response)

@@ -6,7 +6,6 @@ require 'json'
 
 module Bunq
   class Resource
-    attr_reader :resource
     NO_PARAMS = {}.freeze
 
     def initialize(client, path)
