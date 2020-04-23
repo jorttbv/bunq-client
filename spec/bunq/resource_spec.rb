@@ -20,7 +20,7 @@ describe Bunq::Resource do
 
       expect do
         resource.get
-      end .to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
+      end.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
     end
 
     it 'handles timeouts for put' do
@@ -28,7 +28,7 @@ describe Bunq::Resource do
 
       expect do
         resource.put({})
-      end .to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
+      end.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
     end
 
     it 'handles timeouts for post' do
@@ -36,7 +36,7 @@ describe Bunq::Resource do
 
       expect do
         resource.post({})
-      end .to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
+      end.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
     end
   end
 
