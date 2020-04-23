@@ -20,13 +20,8 @@ module RequiresSessionExampleGroup
   def self.included(base)
     base.let!(:session_stub) do
       stub_request(:post, "#{client.configuration.base_url}/v1/session-server")
-        .with({
-          body: JSON.dump({secret: client.configuration.api_key}),
-        },
-             )
-        .to_return(
-          body: session_response,
-        )
+        .with(body: JSON.dump(secret: client.configuration.api_key))
+        .to_return(body: session_response)
     end
     base.let(:session_response) { IO.read('spec/bunq/fixtures/session_server.post.json') }
   end

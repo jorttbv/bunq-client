@@ -12,12 +12,13 @@ module Bunq
     # https://doc.bunq.com/api/1/call/certificate-pinned/method/post
     def create(pem_certificate)
       @resource.with_session do
-        @resource.post({
-          certificate_chain: [
-            {certificate: pem_certificate},
-          ],
-        },
-                      )
+        @resource.post(
+          {
+            certificate_chain: [
+              {certificate: pem_certificate},
+            ],
+          },
+        )
       end
     end
   end

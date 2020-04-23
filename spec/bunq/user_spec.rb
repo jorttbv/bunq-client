@@ -13,10 +13,7 @@ describe Bunq::User do
 
     it 'returns a specific monetary account' do
       stub_request(:get, user_url)
-        .to_return({
-          body: response,
-        },
-                  )
+        .to_return(body: response)
 
       result = user.show
       expect(result).to include_json [{"UserCompany": {"id": 42}}]

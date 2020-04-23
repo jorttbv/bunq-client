@@ -13,11 +13,12 @@ describe Bunq::MonetaryAccount do
 
     before do
       stub_request(:get, "#{user_url}/monetary-account/#{account_id}")
-        .to_return({
-          status: status_code,
-          body: response,
-        },
-                  )
+        .to_return(
+          {
+            status: status_code,
+            body: response,
+          },
+        )
     end
 
     context 'given a known id' do

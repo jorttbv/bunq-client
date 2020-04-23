@@ -21,12 +21,13 @@ describe Bunq::DeviceServers do
     context 'with valid input' do
       let(:response) do
         {
-          "Response": [{
-            "Id": {
-              "id": 30,
+          "Response": [
+            {
+              "Id": {
+                "id": 30,
+              },
             },
-          },
-],
+          ],
         }
       end
       it 'returns the id of the created device server' do
@@ -34,19 +35,22 @@ describe Bunq::DeviceServers do
           .with(
             body: {description: description, secret: api_key, permitted_ips: permitted_ips},
           )
-          .to_return({
-            body: JSON.dump(response),
-          },
-                    )
+          .to_return(
+            {
+              body: JSON.dump(response),
+            },
+          )
 
         result = device_servers.create(description, permitted_ips: permitted_ips)
-        expect(result).to include_json([{
-          "Id": {
-            "id": 30,
-          },
-        },
-],
-                                      )
+        expect(result).to include_json(
+          [
+            {
+              "Id": {
+                "id": 30,
+              },
+            },
+          ],
+        )
       end
     end
   end
@@ -71,10 +75,11 @@ describe Bunq::DeviceServers do
 
     it 'lists the device servers' do
       stub_request(:get, bunq_uri)
-        .to_return({
-          body: JSON.dump(response),
-        },
-                  )
+        .to_return(
+          {
+            body: JSON.dump(response),
+          },
+        )
 
       result = device_servers.index
       expect(result).to include_json(

@@ -45,11 +45,12 @@ module Bunq
           last_page = !pagination[paging_url(params)]
           next if last_page
 
-          next_params = params.merge("#{paging_id(params)}": param(
-            paging_id(params),
-            pagination[paging_url(params)],
-          ),
-                                    )
+          next_params = params.merge(
+            "#{paging_id(params)}": param(
+              paging_id(params),
+              pagination[paging_url(params)],
+            ),
+          )
         end
       end
     end

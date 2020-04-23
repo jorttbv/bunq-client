@@ -13,18 +13,20 @@ describe Bunq::CertificatePinned do
 
     it 'pins a certificate' do
       stub_request(:post, "#{user_url}/certificate-pinned")
-        .with({
-          body: {
-            certificate_chain: [
-              {certificate: 'MY CERTIFICATE'},
-            ],
+        .with(
+          {
+            body: {
+              certificate_chain: [
+                {certificate: 'MY CERTIFICATE'},
+              ],
+            },
           },
-        },
-             )
-        .to_return({
-          body: response,
-        },
-                  )
+        )
+        .to_return(
+          {
+            body: response,
+          },
+        )
 
       result = user.certificate_pinned.create('MY CERTIFICATE')
       expect(result).to include_json({"Response": [{"Id": {"id": 82}}]})

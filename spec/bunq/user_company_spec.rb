@@ -12,10 +12,7 @@ describe Bunq::UserCompany, :requires_session do
 
     it 'returns a specific user company' do
       stub_request(:get, user_company_url)
-        .to_return({
-          body: response,
-        },
-                  )
+        .to_return(body: response)
 
       result = user_company.show
       expect(session_stub).to have_been_requested
@@ -36,10 +33,7 @@ describe Bunq::UserCompany, :requires_session do
     it 'returns the user company' do
       stub_request(:put, user_company_url)
         .with(body: {notification_filters: notification_filters})
-        .to_return({
-          body: response,
-        },
-                  )
+        .to_return(body: response)
 
       result = user_company.update({notification_filters: notification_filters})
       expect(result).to include_json [{"Id": {"id": 42}}]
