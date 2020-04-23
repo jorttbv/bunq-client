@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Bunq
   ##
   # https://doc.bunq.com/api/1/call/monetary-account

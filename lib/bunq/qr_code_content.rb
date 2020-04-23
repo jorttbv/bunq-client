@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Bunq
   class QrCodeContent
     def initialize(parent_resource)

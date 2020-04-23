@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 require 'rspec/json_expectations'
 require_relative '../../lib/bunq/errors'
