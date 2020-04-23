@@ -11,11 +11,11 @@ describe Bunq::MonetaryAccounts do
 
     it 'returns a list of monetary accounts' do
       stub_request(:get, "#{user_url}/monetary-account")
-        .with(query: {count: 200},)
+        .with(query: {count: 200})
         .to_return({body: response})
 
       result = user.monetary_accounts.index
-      expect(result.to_a).to include_json ([{"MonetaryAccountBank": {"id": 42}}])
+      expect(result.to_a).to include_json [{"MonetaryAccountBank": {"id": 42}}]
     end
   end
 end

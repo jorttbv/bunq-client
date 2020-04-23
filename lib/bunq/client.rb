@@ -53,7 +53,8 @@ module Bunq
     # Returns a new instance of +Client+ with the current +configuration+.
     #
     def client
-      fail "No configuration! Call Bunq.configure first." unless configuration
+      fail 'No configuration! Call Bunq.configure first.' unless configuration
+
       Client.new(configuration.dup)
     end
   end
@@ -81,7 +82,7 @@ module Bunq
   # a new one is started automatically.
   #
   class ThreadSafeSessionCache
-    CACHE_KEY = 'CURRENT_BUNQ_SESSION'
+    CACHE_KEY = 'CURRENT_BUNQ_SESSION'.freeze
 
     def initialize
       clear
@@ -100,52 +101,52 @@ module Bunq
   # Configuration object for connecting to the bunq api
   #
   class Configuration
-    SANDBOX_BASE_URL = 'https://public-api.sandbox.bunq.com'
-    PRODUCTION_BASE_URL = 'https://api.bunq.com'
+    SANDBOX_BASE_URL = 'https://public-api.sandbox.bunq.com'.freeze
+    PRODUCTION_BASE_URL = 'https://api.bunq.com'.freeze
 
-    DEFAULT_LANGUAGE = 'nl_NL'
-    DEFAULT_REGION = 'nl_NL'
-    DEFAULT_GEOLOCATION = '0 0 0 0 000'
-    DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}"
+    DEFAULT_LANGUAGE = 'nl_NL'.freeze
+    DEFAULT_REGION = 'nl_NL'.freeze
+    DEFAULT_GEOLOCATION = '0 0 0 0 000'.freeze
+    DEFAULT_USER_AGENT = "bunq ruby client #{Bunq::VERSION}".freeze
     DEFAULT_TIMEOUT = 60
     DEFAULT_SESSION_CACHE = NoSessionCache.new
 
     # Base url for the bunq api. Defaults to +PRODUCTION_BASE_URL+
     attr_accessor :base_url,
-      # Flag to set to connect to sandbox. Defaults to +false+.
-      # If set to +true+ you must also specify +sandbox_user+
-      # and +sandbox_password+
-      :sandbox,
-      # The username for connecting to the sandbox
-      :sandbox_user,
-      # The password for connecting to the sandbox
-      :sandbox_password,
-      # Your installation token obtained from bunq
-      :installation_token,
-      # Your api key obtained from bunq
-      :api_key,
-      # Your language. Defaults to  +DEFAULT_LANGUAGE+
-      :language,
-      # Your region. Defaults to  +DEFAULT_REGION+
-      :region,
-      # Your geolocation. Defaults to +DEFAULT_GEOLOCATION+
-      :geolocation,
-      # Arbitrary user agent to connect to bunq. Defaults to +DEFAULT_USER_AGENT+
-      :user_agent,
-      # Flag to set when you want to disable the signature
-      # retrieved from bunq. Mainly useful for testing.
-      # Defaults to +false+
-      :disable_response_signature_verification,
-      # The private key for signing the request
-      :private_key,
-      # The public key of this installation for verifying the response
-      :server_public_key,
-      # Timeout in seconds to wait for bunq api. Defaults to +DEFAULT_TIMEOUT+
-      :timeout,
-      # Cache to retrieve current session from. Defaults to +DEFAULT_SESSION_CACHE+,
-      # which will create a new session per `Bunq.client` instance.
-      # See +ThreadSafeSessionCache+ for more advanced use.
-      :session_cache
+                  # Flag to set to connect to sandbox. Defaults to +false+.
+                  # If set to +true+ you must also specify +sandbox_user+
+                  # and +sandbox_password+
+                  :sandbox,
+                  # The username for connecting to the sandbox
+                  :sandbox_user,
+                  # The password for connecting to the sandbox
+                  :sandbox_password,
+                  # Your installation token obtained from bunq
+                  :installation_token,
+                  # Your api key obtained from bunq
+                  :api_key,
+                  # Your language. Defaults to  +DEFAULT_LANGUAGE+
+                  :language,
+                  # Your region. Defaults to  +DEFAULT_REGION+
+                  :region,
+                  # Your geolocation. Defaults to +DEFAULT_GEOLOCATION+
+                  :geolocation,
+                  # Arbitrary user agent to connect to bunq. Defaults to +DEFAULT_USER_AGENT+
+                  :user_agent,
+                  # Flag to set when you want to disable the signature
+                  # retrieved from bunq. Mainly useful for testing.
+                  # Defaults to +false+
+                  :disable_response_signature_verification,
+                  # The private key for signing the request
+                  :private_key,
+                  # The public key of this installation for verifying the response
+                  :server_public_key,
+                  # Timeout in seconds to wait for bunq api. Defaults to +DEFAULT_TIMEOUT+
+                  :timeout,
+                  # Cache to retrieve current session from. Defaults to +DEFAULT_SESSION_CACHE+,
+                  # which will create a new session per `Bunq.client` instance.
+                  # See +ThreadSafeSessionCache+ for more advanced use.
+                  :session_cache
 
     def initialize
       @sandbox = false
@@ -169,7 +170,8 @@ module Bunq
     attr_reader :configuration
 
     def initialize(configuration)
-      fail ArgumentError.new('configuration is required') unless configuration
+      fail ArgumentError, 'configuration is required' unless configuration
+
       @configuration = configuration
     end
 
@@ -262,13 +264,9 @@ module Bunq
         'X-Bunq-Geolocation': configuration.geolocation,
         'X-Bunq-Region': configuration.region,
       }.tap do |h|
-        if configuration.installation_token
-          h[:'X-Bunq-Client-Authentication'] = configuration.installation_token
-        end
+        h[:'X-Bunq-Client-Authentication'] = configuration.installation_token if configuration.installation_token
 
-        if current_session
-          h[:'X-Bunq-Client-Authentication'] = current_session[1]['Token']['token']
-        end
+        h[:'X-Bunq-Client-Authentication'] = current_session[1]['Token']['token'] if current_session
       end
     end
 

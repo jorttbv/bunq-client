@@ -3,7 +3,7 @@ module Bunq
   # https://doc.bunq.com/api/1/call/monetary-account
   class MonetaryAccounts
     def initialize(parent_resource)
-      @resource = parent_resource.append("/monetary-account")
+      @resource = parent_resource.append('/monetary-account')
     end
 
     # https://doc.bunq.com/api/1/call/monetary-account-bank/method/list

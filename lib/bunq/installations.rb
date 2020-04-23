@@ -1,11 +1,11 @@
 module Bunq
   class Installations
     def initialize(client)
-      @resource = Bunq::Resource.new(client, "/v1/installation")
+      @resource = Bunq::Resource.new(client, '/v1/installation')
     end
 
     def create(public_key)
-      fail ArgumentError.new('public_key is required') unless public_key
+      fail ArgumentError, 'public_key is required' unless public_key
 
       @resource.post({client_public_key: public_key}, skip_verify: true)['Response']
     end

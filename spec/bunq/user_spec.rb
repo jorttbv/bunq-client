@@ -10,13 +10,14 @@ describe Bunq::User do
     let(:response) { IO.read('spec/bunq/fixtures/user.get.json') }
 
     it 'returns a specific monetary account' do
-      stub_request(:get, user_url).
-        to_return({
-          body: response
-        })
+      stub_request(:get, user_url)
+        .to_return({
+          body: response,
+        },
+                  )
 
       result = user.show
-      expect(result).to include_json ([{"UserCompany": {"id": 42}}])
+      expect(result).to include_json [{"UserCompany": {"id": 42}}]
     end
   end
 end

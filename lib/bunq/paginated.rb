@@ -16,7 +16,7 @@ module Bunq
     private
 
     def setup_params(count, older_id, newer_id)
-      fail ArgumentError.new('Cant pass both older_id and newer_id') if older_id && newer_id
+      fail ArgumentError, 'Cant pass both older_id and newer_id' if older_id && newer_id
 
       params = {count: count}
       params[:older_id] = older_id if older_id
@@ -30,7 +30,7 @@ module Bunq
 
       Enumerator.new do |yielder|
         loop do
-          raise StopIteration if last_page
+          fail StopIteration if last_page
 
           result = @resource.with_session { @resource.get(next_params) }
           result['Response'].each do |item|
@@ -41,18 +41,26 @@ module Bunq
           fail MissingPaginationObject unless pagination
 
           last_page = !pagination[paging_url(params)]
-          next_params = params.merge(:"#{paging_id(params)}" => param(paging_id(params), pagination[paging_url(params)])) unless last_page
+          next if last_page
+
+          next_params = params.merge("#{paging_id(params)}": param(
+            paging_id(params),
+            pagination[paging_url(params)],
+          ),
+                                    )
         end
       end
     end
 
     def paging_url(params)
       return 'newer_url' if params[:newer_id]
+
       'older_url'
     end
 
     def paging_id(params)
       return 'newer_id' if params[:newer_id]
+
       'older_id'
     end
 

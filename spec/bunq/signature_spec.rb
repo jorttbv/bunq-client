@@ -44,15 +44,15 @@ describe Bunq::Signature do
     let(:server_private_key) { OpenSSL::PKey::RSA.new(IO.read('spec/bunq/fixtures/server-test-private.pem')) }
     let(:server_signature) do
       Base64.strict_encode64(
-        server_private_key.sign(OpenSSL::Digest::SHA256.new, signable_response)
+        server_private_key.sign(OpenSSL::Digest::SHA256.new, signable_response),
       )
     end
 
     let(:headers) do
       {
-        :'X-Bunq-Server-Signature' => [server_signature],
-        :'X-Bunq-Client-Request-Id' => ['57061b04b67ef'],
-        :'X-Bunq-Server-Response-Id' => ['89dcaa5c-fa55-4068-9822-3f87985d2268'],
+        'X-Bunq-Server-Signature': [server_signature],
+        'X-Bunq-Client-Request-Id': ['57061b04b67ef'],
+        'X-Bunq-Server-Response-Id': ['89dcaa5c-fa55-4068-9822-3f87985d2268'],
       }
     end
     let(:code) { 200 }
@@ -62,7 +62,7 @@ describe Bunq::Signature do
       double(
         raw_headers: headers,
         code: code,
-        body: body
+        body: body,
       )
     end
     subject { Bunq.client.signature.verify!(response) }
@@ -73,7 +73,7 @@ describe Bunq::Signature do
         "X-Bunq-Client-Request-Id: 57061b04b67ef\n" \
         "X-Bunq-Server-Response-Id: 89dcaa5c-fa55-4068-9822-3f87985d2268\n" \
         "\n" \
-        "{\"Response\":[{\"Id\":{\"id\":1561}}]}"
+        '{"Response":[{"Id":{"id":1561}}]}'
       end
 
       it 'verifies that response successfully' do
@@ -97,7 +97,7 @@ describe Bunq::Signature do
       end
 
       context 'and a server signature that is nil' do
-        let(:headers) { {:'X-Bunq-Server-Signature' => nil} }
+        let(:headers) { {'X-Bunq-Server-Signature': nil} }
 
         it 'fails' do
           expect { subject }.to raise_error(Bunq::AbsentResponseSignature)
@@ -107,7 +107,7 @@ describe Bunq::Signature do
 
     context 'given only the response body is signed' do
       let(:signable_response) do
-        "{\"Response\":[{\"Id\":{\"id\":1561}}]}"
+        '{"Response":[{"Id":{"id":1561}}]}'
       end
 
       it 'verifies that response successfully' do

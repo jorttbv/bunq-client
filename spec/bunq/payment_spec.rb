@@ -11,13 +11,14 @@ describe Bunq::Payment, :requires_session do
     let(:payment_id) { 10 }
 
     it 'returns a specific payment' do
-      stub_request(:get, "#{user_url}/monetary-account/2/payment/#{payment_id}").
-        to_return({
-          body: response
-        })
+      stub_request(:get, "#{user_url}/monetary-account/2/payment/#{payment_id}")
+        .to_return({
+          body: response,
+        },
+                  )
 
       result = user.monetary_account(2).payment(payment_id).show
-      expect(result).to include_json ([{"Payment": {"id": 42}}])
+      expect(result).to include_json [{"Payment": {"id": 42}}]
     end
   end
 end

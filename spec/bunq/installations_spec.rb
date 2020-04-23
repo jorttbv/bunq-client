@@ -17,11 +17,11 @@ describe Bunq::Installations do
     it 'creates a new installation' do
       stub_request(:post, bunq_uri)
         .with(
-          body: {client_public_key: public_key}
+          body: {client_public_key: public_key},
         )
         .to_return(
           status: 200,
-          body: response
+          body: response,
         )
 
       result = installations.create(public_key)
@@ -36,11 +36,11 @@ describe Bunq::Installations do
       stub_request(:get, bunq_uri)
         .to_return(
           status: 200,
-          body: response
+          body: response,
         )
 
-        result = installations.index
-        expect(result).to include_json(JSON.parse(response)['Response'])
+      result = installations.index
+      expect(result).to include_json(JSON.parse(response)['Response'])
     end
   end
 end

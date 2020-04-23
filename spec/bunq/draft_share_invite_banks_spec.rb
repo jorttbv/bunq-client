@@ -9,17 +9,17 @@ describe Bunq::DraftShareInviteBanks, :requires_session do
   describe '#create' do
     let(:invite) do
       {
-        "status": "PENDING",
+        "status": 'PENDING',
         "expiration": Time.now.strftime('%Y-%m-%d %H:%M:%S.%L%3N'),
         "draft_share_settings": {
           "share_detail": {
             "ShareDetailReadOnly": {
               "view_balance": true,
               "view_old_events": true,
-              "view_new_events": true
+              "view_new_events": true,
             },
           },
-        }
+        },
       }
     end
     let(:response) { IO.read('spec/bunq/fixtures/draft_share_invite_banks.post.json') }

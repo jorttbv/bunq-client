@@ -3,7 +3,7 @@ module Bunq
   # https://doc.bunq.com/api/1/call/certificate-pinned
   class CertificatePinned
     def initialize(parent_resource)
-      @resource = parent_resource.append("/certificate-pinned")
+      @resource = parent_resource.append('/certificate-pinned')
     end
 
     ##
@@ -12,9 +12,10 @@ module Bunq
       @resource.with_session do
         @resource.post({
           certificate_chain: [
-            {certificate: pem_certificate}
-          ]
-        })
+            {certificate: pem_certificate},
+          ],
+        },
+                      )
       end
     end
   end

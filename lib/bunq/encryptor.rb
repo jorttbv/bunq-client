@@ -1,13 +1,13 @@
 module Bunq
   class Encryptor
-    HEADER_CLIENT_ENCRYPTION_HMAC = 'X-Bunq-Client-Encryption-Hmac'
-    HEADER_CLIENT_ENCRYPTION_IV = 'X-Bunq-Client-Encryption-Iv'
-    HEADER_CLIENT_ENCRYPTION_KEY = 'X-Bunq-Client-Encryption-Key'
-    AES_ENCRYPTION_METHOD = 'aes-256-cbc'
-    HMAC_ALGORITHM = 'sha1'
+    HEADER_CLIENT_ENCRYPTION_HMAC = 'X-Bunq-Client-Encryption-Hmac'.freeze
+    HEADER_CLIENT_ENCRYPTION_IV = 'X-Bunq-Client-Encryption-Iv'.freeze
+    HEADER_CLIENT_ENCRYPTION_KEY = 'X-Bunq-Client-Encryption-Key'.freeze
+    AES_ENCRYPTION_METHOD = 'aes-256-cbc'.freeze
+    HMAC_ALGORITHM = 'sha1'.freeze
 
     def initialize(server_public_key)
-      fail ArgumentError.new('server_public_key is mandatory') unless server_public_key
+      fail ArgumentError, 'server_public_key is mandatory' unless server_public_key
 
       @server_public_key = OpenSSL::PKey::RSA.new(server_public_key)
     end

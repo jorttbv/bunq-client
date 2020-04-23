@@ -5,7 +5,7 @@ require 'json'
 module Bunq
   class Resource
     attr_reader :resource
-    NO_PARAMS = {}
+    NO_PARAMS = {}.freeze
 
     def initialize(client, path)
       @client = client
@@ -19,7 +19,6 @@ module Bunq
     rescue RestClient::Exceptions::Timeout
       raise Bunq::Timeout
     end
-
 
     def post(payload, skip_verify: false, encrypt: false, &block)
       body = JSON.generate(payload)
@@ -74,7 +73,7 @@ module Bunq
             x[:user] = client.configuration.sandbox_user
             x[:password] = client.configuration.sandbox_password
           end
-        end
+        end,
       )
     end
 
@@ -88,12 +87,13 @@ module Bunq
       headers
     end
 
-    def sign_request(verb, params, headers, payload = nil)
+    def sign_request(_verb, _params, _headers, payload = nil)
       client.signature.create(payload)
     end
 
     def encode_params(path, params)
       return path if params.empty?
+
       "#{path}?#{URI.escape(params.collect { |k, v| "#{k}=#{v}" }.join('&'))}"
     end
 
@@ -109,7 +109,7 @@ module Bunq
       (100..499).include?(response.code)
     end
 
-    def handle_response(response, _request, _result, &block)
+    def handle_response(response, _request, _result)
       if response.code == 200 || response.code == 201
         if block_given?
           yield(response)

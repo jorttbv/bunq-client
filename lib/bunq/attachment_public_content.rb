@@ -11,7 +11,7 @@ module Bunq
     # Returns the raw content of a public attachment with given ID.
     # The raw content is the binary representation of a file.
     def show
-      @resource.with_session do 
+      @resource.with_session do
         @resource.get { |response| response.body }
       end
     end

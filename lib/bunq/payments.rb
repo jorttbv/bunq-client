@@ -4,7 +4,7 @@ module Bunq
   # https://doc.bunq.com/api/1/call/payment
   class Payments
     def initialize(parent_resource)
-      @resource = parent_resource.append("/payment")
+      @resource = parent_resource.append('/payment')
     end
 
     # https://doc.bunq.com/api/1/call/payment/method/list
