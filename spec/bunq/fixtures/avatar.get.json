@@ -1,0 +1,17 @@
+{
+  "Response":[
+     {
+        "Avatar":{
+           "uuid":"2c7935a6-1e58-4daf-8cdb-41874e9f1a71",
+           "image":[
+              {
+                 "attachment_public_uuid":"d93e07e3-d420-45e5-8684-fc0c09a63686",
+                 "content_type":"image/jpeg",
+                 "height":640,
+                 "width":320
+              }
+           ]
+        }
+     }
+  ]
+}

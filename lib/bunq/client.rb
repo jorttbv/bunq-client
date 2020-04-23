@@ -7,6 +7,8 @@ require 'thread_safe'
 require_relative './version'
 require_relative './resource'
 
+require_relative './avatars'
+require_relative './avatar'
 require_relative './installations'
 require_relative './installation'
 require_relative './device_servers'
@@ -175,6 +177,14 @@ module Bunq
       fail ArgumentError, 'configuration is required' unless configuration
 
       @configuration = configuration
+    end
+
+    def avatars
+      Bunq::Avatars.new(self)
+    end
+
+    def avatar(id)
+      Bunq::Avatar.new(self, id)
     end
 
     def installations
