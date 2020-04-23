@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Bunq
   class Cards
     def initialize(parent_resource)

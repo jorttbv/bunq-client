@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Bunq
   ##
   # See https://doc.bunq.com/api/1/call/device-server

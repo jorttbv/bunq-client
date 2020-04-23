@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'qr_code_content'
 
 module Bunq

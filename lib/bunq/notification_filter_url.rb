@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Bunq
   # https://doc.bunq.com/#/notification-filter-url
   class NotificationFilterUrl

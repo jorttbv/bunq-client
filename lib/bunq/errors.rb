@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Bunq
   class ResponseError < StandardError
     attr_reader :code

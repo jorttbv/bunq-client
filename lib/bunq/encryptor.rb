@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Bunq
   class Encryptor
     HEADER_CLIENT_ENCRYPTION_HMAC = 'X-Bunq-Client-Encryption-Hmac'.freeze
