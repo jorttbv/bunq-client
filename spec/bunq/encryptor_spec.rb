@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Bunq::Encryptor do
@@ -8,13 +10,13 @@ describe Bunq::Encryptor do
   describe '#encrypt' do
     let(:server_private_key) { OpenSSL::PKey::RSA.new(IO.read('spec/bunq/fixtures/server-test-private.pem')) }
 
-    let(:encryption_data)    { subject.encrypt(body) }
-    let(:encrypted_body)     { encryption_data.first }
+    let(:encryption_data) { subject.encrypt(body) }
+    let(:encrypted_body) { encryption_data.first }
     let(:encryption_headers) { encryption_data.last }
 
-    let(:iv)            { Base64.strict_decode64(encryption_headers[described_class::HEADER_CLIENT_ENCRYPTION_IV]) }
+    let(:iv) { Base64.strict_decode64(encryption_headers[described_class::HEADER_CLIENT_ENCRYPTION_IV]) }
     let(:encrypted_key) { Base64.strict_decode64(encryption_headers[described_class::HEADER_CLIENT_ENCRYPTION_KEY]) }
-    let(:hmac)          { Base64.strict_decode64(encryption_headers[described_class::HEADER_CLIENT_ENCRYPTION_HMAC]) }
+    let(:hmac) { Base64.strict_decode64(encryption_headers[described_class::HEADER_CLIENT_ENCRYPTION_HMAC]) }
 
     let(:key) { server_private_key.private_decrypt(encrypted_key) }
 

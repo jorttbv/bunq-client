@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'resource'
 require_relative 'draft_share_invite_bank'
 

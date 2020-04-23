@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Bunq::UserCompany, :requires_session do
@@ -10,13 +12,11 @@ describe Bunq::UserCompany, :requires_session do
 
     it 'returns a specific user company' do
       stub_request(:get, user_company_url)
-        .to_return({
-          body: response
-        })
+        .to_return(body: response)
 
       result = user_company.show
       expect(session_stub).to have_been_requested
-      expect(result).to include_json ([{"UserCompany": {"id": 42}}])
+      expect(result).to include_json [{"UserCompany": {"id": 42}}]
     end
   end
 
@@ -26,19 +26,17 @@ describe Bunq::UserCompany, :requires_session do
       [
         notification_delivery_method: 'URL',
         notification_target: 'https://my.company.com/callback-url',
-        category: 'PAYMENT'
+        category: 'PAYMENT',
       ]
     end
 
     it 'returns the user company' do
       stub_request(:put, user_company_url)
         .with(body: {notification_filters: notification_filters})
-        .to_return({
-          body: response
-        })
+        .to_return(body: response)
 
       result = user_company.update({notification_filters: notification_filters})
-      expect(result).to include_json ([{"Id": {"id": 42}}])
+      expect(result).to include_json [{"Id": {"id": 42}}]
     end
   end
 end

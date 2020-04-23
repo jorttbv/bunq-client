@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Bunq::Payments, :requires_session do
@@ -34,14 +36,16 @@ describe Bunq::Payments, :requires_session do
           .with(query: {count: 1, older_id: 42})
           .to_return(body: page_2_response)
 
-        expect(subject.to_a).to include_json([
-          {
-            "Payment": { "id": 42 },
-          },
-          {
-            "Payment": { "id": 84 },
-          },
-        ])
+        expect(subject.to_a).to include_json(
+          [
+            {
+              "Payment": {"id": 42},
+            },
+            {
+              "Payment": {"id": 84},
+            },
+          ],
+        )
       end
     end
 
@@ -65,17 +69,19 @@ describe Bunq::Payments, :requires_session do
           .with(query: {count: 1, newer_id: 120})
           .to_return(body: page_1_response)
 
-        expect(subject.to_a).to include_json([
-          {
-            "Payment": { "id": 170 },
-          },
-          {
-            "Payment": { "id": 120 },
-          },
-          {
-            "Payment": { "id": 42 },
-          },
-        ])
+        expect(subject.to_a).to include_json(
+          [
+            {
+              "Payment": {"id": 170},
+            },
+            {
+              "Payment": {"id": 120},
+            },
+            {
+              "Payment": {"id": 42},
+            },
+          ],
+        )
       end
     end
   end

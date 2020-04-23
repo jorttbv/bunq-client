@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Bunq::Installation, :requires_session do
@@ -13,7 +15,7 @@ describe Bunq::Installation, :requires_session do
       stub_request(:get, installation_url)
         .to_return(body: response)
 
-      expect(subject).to include_json (JSON.parse(response)['Response'])
+      expect(subject).to include_json(JSON.parse(response)['Response'])
     end
   end
 end

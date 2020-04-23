@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Bunq::MonetaryAccount do
@@ -10,11 +12,13 @@ describe Bunq::MonetaryAccount do
     let(:account_id) { 10 }
 
     before do
-      stub_request(:get, "#{user_url}/monetary-account/#{account_id}").
-        to_return({
-          status: status_code,
-          body: response
-        })
+      stub_request(:get, "#{user_url}/monetary-account/#{account_id}")
+        .to_return(
+          {
+            status: status_code,
+            body: response,
+          },
+        )
     end
 
     context 'given a known id' do
@@ -23,7 +27,7 @@ describe Bunq::MonetaryAccount do
 
       it 'returns a specific monetary account' do
         expect(user.monetary_account(account_id).show)
-          .to include_json ([{"MonetaryAccountBank": {"id": 42}}])
+          .to include_json [{"MonetaryAccountBank": {"id": 42}}]
       end
     end
 

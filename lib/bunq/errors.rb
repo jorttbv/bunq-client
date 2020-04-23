@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Bunq
   class ResponseError < StandardError
     attr_reader :code
     attr_reader :headers
     attr_reader :body
 
-    def initialize(msg = "Response error", code: nil, headers: nil, body: nil)
+    def initialize(msg = 'Response error', code: nil, headers: nil, body: nil)
       @code = code
       @headers = headers || {}
       @body = body
@@ -14,7 +16,12 @@ module Bunq
     # Returns the parsed body if it is a JSON document, nil otherwise.
     # @param opts [Hash] Optional options that are passed to `JSON.parse`.
     def parsed_body(opts = {})
-      JSON.parse(@body, opts) if @body && @headers['content-type'] && @headers['content-type'].include?('application/json')
+      if @body && @headers['content-type'] && @headers['content-type'].include?('application/json')
+        JSON.parse(
+          @body,
+          opts,
+        )
+      end
     end
 
     # Returns an array of errors returned from the API, or nil if no errors are returned.

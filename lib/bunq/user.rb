@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'resource'
 require_relative 'monetary_account'
 require_relative 'monetary_accounts'

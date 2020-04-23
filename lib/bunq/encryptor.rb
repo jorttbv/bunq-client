@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bunq
   class Encryptor
     HEADER_CLIENT_ENCRYPTION_HMAC = 'X-Bunq-Client-Encryption-Hmac'
@@ -7,7 +9,7 @@ module Bunq
     HMAC_ALGORITHM = 'sha1'
 
     def initialize(server_public_key)
-      fail ArgumentError.new('server_public_key is mandatory') unless server_public_key
+      fail ArgumentError, 'server_public_key is mandatory' unless server_public_key
 
       @server_public_key = OpenSSL::PKey::RSA.new(server_public_key)
     end

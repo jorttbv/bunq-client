@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require_relative 'qr_code_content'
 
 module Bunq
   class DraftShareInviteBanks
     def initialize(parent_resource)
-      @resource = parent_resource.append("/draft-share-invite-bank")
+      @resource = parent_resource.append('/draft-share-invite-bank')
     end
 
     def create(invite)

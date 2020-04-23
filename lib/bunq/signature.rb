@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'errors'
 
 module Bunq
@@ -7,8 +9,8 @@ module Bunq
     BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER = 'X-Bunq-Server-Signature'.downcase
 
     def initialize(private_key, server_public_key)
-      fail ArgumentError.new('private_key is mandatory') unless private_key
-      fail ArgumentError.new('server_public_key is mandatory') unless server_public_key
+      fail ArgumentError, 'private_key is mandatory' unless private_key
+      fail ArgumentError, 'server_public_key is mandatory' unless server_public_key
 
       @private_key = OpenSSL::PKey::RSA.new(private_key)
       @server_public_key = OpenSSL::PKey::RSA.new(server_public_key)
@@ -48,12 +50,12 @@ module Bunq
     end
 
     def verifiable_header?(header_name, _)
-      _header_name = header_name.to_s.downcase
-      _header_name.start_with?(BUNQ_HEADER_PREFIX) && _header_name != BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER
+      the_header_name = header_name.to_s.downcase
+      the_header_name.start_with?(BUNQ_HEADER_PREFIX) && the_header_name != BUNQ_SERVER_SIGNATURE_RESPONSE_HEADER
     end
 
-    def skip_signature_check(responseCode)
-      (Bunq::configuration.sandbox && responseCode == 409) || responseCode == 429
+    def skip_signature_check(response_code)
+      (Bunq.configuration.sandbox && response_code == 409) || response_code == 429
     end
 
     def verify_legacy(signature, response)
@@ -66,7 +68,7 @@ module Bunq
           "#{k.to_s.split('-').map(&:capitalize).join('-')}: #{v.first}"
         end
 
-      verify(signature, %Q{#{response.code}\n#{sorted_bunq_headers.join("\n")}\n\n#{response.body}})
+      verify(signature, %(#{response.code}\n#{sorted_bunq_headers.join("\n")}\n\n#{response.body}))
     end
 
     def verify_modern(signature, response)

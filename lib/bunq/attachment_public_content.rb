@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bunq
   ##
   # https://doc.bunq.com/api/1/call/attachment-public-content
@@ -11,8 +13,8 @@ module Bunq
     # Returns the raw content of a public attachment with given ID.
     # The raw content is the binary representation of a file.
     def show
-      @resource.with_session do 
-        @resource.get { |response| response.body }
+      @resource.with_session do
+        @resource.get(&:body)
       end
     end
   end

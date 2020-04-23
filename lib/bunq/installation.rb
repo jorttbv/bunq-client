@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bunq
   class Installation
     def initialize(client, id)

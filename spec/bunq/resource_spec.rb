@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rspec/json_expectations'
 require_relative '../../lib/bunq/errors'
 
 describe Bunq::Resource do
   let(:client) { Bunq.client }
-  let(:url) { "#{client.configuration.base_url}" }
+  let(:url) { client.configuration.base_url.to_s }
 
   let(:resource) { Bunq::Resource.new(client, '/resource') }
 
@@ -16,19 +18,25 @@ describe Bunq::Resource do
     it 'handles timeouts for get' do
       stub_request(:get, "#{url}/resource").to_timeout
 
-      expect { resource.get }.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
+      expect do
+        resource.get
+      end.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
     end
 
     it 'handles timeouts for put' do
       stub_request(:put, "#{url}/resource").to_timeout
 
-      expect { resource.put({}) }.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
+      expect do
+        resource.put({})
+      end.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
     end
 
     it 'handles timeouts for post' do
       stub_request(:post, "#{url}/resource").to_timeout
 
-      expect { resource.post({}) }.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
+      expect do
+        resource.post({})
+      end.to(raise_error(Bunq::Timeout)) { |e| expect(e.cause).to be_a_kind_of RestClient::Exceptions::Timeout }
     end
   end
 
@@ -41,7 +49,7 @@ describe Bunq::Resource do
 
     it 'fails' do
       stub_request(:get, "#{url}/resource")
-        .to_return({ status: 409 })
+        .to_return({status: 409})
 
       expect { resource.get({}) }.to raise_error(Bunq::TooManyRequestsResponse)
     end
@@ -50,7 +58,7 @@ describe Bunq::Resource do
   context 'too many requests production response' do
     it 'fails' do
       stub_request(:get, "#{url}/resource")
-        .to_return({ status: 429 })
+        .to_return({status: 429})
 
       expect { resource.get({}) }.to raise_error(Bunq::TooManyRequestsResponse)
     end
@@ -59,7 +67,7 @@ describe Bunq::Resource do
   describe 'given a response with status code 401 Unauthorized' do
     it 'raises a Bunq::UnauthorisedResponse' do
       stub_request(:get, "#{url}/resource")
-        .to_return({ status: 401 })
+        .to_return({status: 401})
 
       expect { resource.get({}) }.to raise_error(Bunq::UnauthorisedResponse)
     end
@@ -68,7 +76,7 @@ describe Bunq::Resource do
   describe 'given a response with status code 403 Forbidden' do
     it 'raises a Bunq::UnauthorisedResponse' do
       stub_request(:get, "#{url}/resource")
-        .to_return({ status: 403 })
+        .to_return({status: 403})
 
       expect { resource.get({}) }.to raise_error(Bunq::UnauthorisedResponse)
     end
