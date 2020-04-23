@@ -22,7 +22,7 @@ require_relative './monetary_accounts'
 require_relative './payment'
 require_relative './payments'
 require_relative './signature'
-require_relative './attachment_public_content.rb'
+require_relative './attachment_public_content'
 
 ##
 # Usage
