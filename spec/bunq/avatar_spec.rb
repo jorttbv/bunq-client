@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Bunq::Avatar do
@@ -12,8 +14,9 @@ describe Bunq::Avatar do
       stub_request(:get, avatar_url)
         .to_return({
           status: status_code,
-          body: response
-        })
+          body: response,
+        },
+                  )
     end
 
     context 'given a known id' do

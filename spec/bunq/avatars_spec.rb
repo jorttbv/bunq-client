@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Bunq::Avatars, :requires_session do
@@ -6,7 +8,7 @@ describe Bunq::Avatars, :requires_session do
 
   describe '#create' do
     let(:attachment_public_uuid) { 'f7dd168a-e487-49b5-98ce-bc78171bc291' }
-    let(:payload) { { attachment_public_uuid: attachment_public_uuid } }
+    let(:payload) { {attachment_public_uuid: attachment_public_uuid} }
     let(:response) { IO.read('spec/bunq/fixtures/avatars.post.json') }
     subject { client.avatars.create(attachment_public_uuid) }
 
