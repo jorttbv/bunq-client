@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative 'notification_filter_url'
+require_relative 'bunqme_tab'
+require_relative 'bunqme_tabs'
 
 module Bunq
   ##
@@ -8,6 +10,14 @@ module Bunq
   class MonetaryAccount
     def initialize(parent_resource, id)
       @resource = parent_resource.append("/monetary-account/#{id}")
+    end
+
+    def bunqme_tab(id)
+      Bunq::BunqmeTab.new(@resource, id)
+    end
+
+    def bunqme_tabs
+      Bunq::BunqmeTabs.new(@resource)
     end
 
     def payment(id)

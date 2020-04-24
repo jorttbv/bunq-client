@@ -1,0 +1,240 @@
+{
+  "Pagination": {
+    "older_url": null
+  },
+	"Response": [{
+		"BunqMeTab": {
+      "id": 100,
+      "created": "string",
+      "updated": "string",
+      "time_expiry": "string",
+      "monetary_account_id": 0,
+      "status": "string",
+      "bunqme_tab_share_url": "string",
+      "bunqme_tab_entry": {
+        "amount_inquired": {
+          "value": "string",
+          "currency": "string"
+        },
+        "description": "string",
+        "redirect_url": "string",
+        "uuid": "string",
+        "alias": {
+          "iban": "string",
+          "display_name": "string",
+          "avatar": {
+            "uuid": "string",
+            "anchor_uuid": "string",
+            "image": [
+              {
+                "attachment_public_uuid": "string",
+                "content_type": "string",
+                "height": 0,
+                "width": 0
+              }
+            ]
+          },
+          "label_user": {
+            "uuid": "string",
+            "display_name": "string",
+            "country": "string",
+            "avatar": {
+              "uuid": "string",
+              "anchor_uuid": "string",
+              "image": [
+                {
+                  "attachment_public_uuid": "string",
+                  "content_type": "string",
+                  "height": 0,
+                  "width": 0
+                }
+              ]
+            },
+            "public_nick_name": "string"
+          },
+          "country": "string",
+          "bunq_me": {
+            "type": "string",
+            "value": "string",
+            "name": "string"
+          },
+          "is_light": true,
+          "swift_bic": "string",
+          "swift_account_number": "string",
+          "transferwise_account_number": "string",
+          "transferwise_bank_code": "string",
+          "merchant_category_code": "string"
+        },
+        "status": "string",
+        "merchant_available": [
+          {
+            "merchant_type": "string",
+            "available": true
+          }
+        ]
+      },
+      "result_inquiries": [
+        {
+          "payment": {
+            "amount": {
+              "value": "string",
+              "currency": "string"
+            },
+            "counterparty_alias": {
+              "iban": "string",
+              "display_name": "string",
+              "avatar": {
+                "uuid": "string",
+                "anchor_uuid": "string",
+                "image": [
+                  {
+                    "attachment_public_uuid": "string",
+                    "content_type": "string",
+                    "height": 0,
+                    "width": 0
+                  }
+                ]
+              },
+              "label_user": {
+                "uuid": "string",
+                "display_name": "string",
+                "country": "string",
+                "avatar": {
+                  "uuid": "string",
+                  "anchor_uuid": "string",
+                  "image": [
+                    {
+                      "attachment_public_uuid": "string",
+                      "content_type": "string",
+                      "height": 0,
+                      "width": 0
+                    }
+                  ]
+                },
+                "public_nick_name": "string"
+              },
+              "country": "string",
+              "bunq_me": {
+                "type": "string",
+                "value": "string",
+                "name": "string"
+              },
+              "is_light": true,
+              "swift_bic": "string",
+              "swift_account_number": "string",
+              "transferwise_account_number": "string",
+              "transferwise_bank_code": "string",
+              "merchant_category_code": "string"
+            },
+            "description": "string",
+            "attachment": [
+              {
+                "id": 0,
+                "monetary_account_id": 0
+              }
+            ],
+            "merchant_reference": "string",
+            "id": 0,
+            "created": "string",
+            "updated": "string",
+            "monetary_account_id": 0,
+            "alias": {
+              "iban": "string",
+              "display_name": "string",
+              "avatar": {
+                "uuid": "string",
+                "anchor_uuid": "string",
+                "image": [
+                  {
+                    "attachment_public_uuid": "string",
+                    "content_type": "string",
+                    "height": 0,
+                    "width": 0
+                  }
+                ]
+              },
+              "label_user": {
+                "uuid": "string",
+                "display_name": "string",
+                "country": "string",
+                "avatar": {
+                  "uuid": "string",
+                  "anchor_uuid": "string",
+                  "image": [
+                    {
+                      "attachment_public_uuid": "string",
+                      "content_type": "string",
+                      "height": 0,
+                      "width": 0
+                    }
+                  ]
+                },
+                "public_nick_name": "string"
+              },
+              "country": "string",
+              "bunq_me": {
+                "type": "string",
+                "value": "string",
+                "name": "string"
+              },
+              "is_light": true,
+              "swift_bic": "string",
+              "swift_account_number": "string",
+              "transferwise_account_number": "string",
+              "transferwise_bank_code": "string",
+              "merchant_category_code": "string"
+            },
+            "type": "string",
+            "sub_type": "string",
+            "bunqto_status": "string",
+            "bunqto_sub_status": "string",
+            "bunqto_share_url": "string",
+            "bunqto_expiry": "string",
+            "bunqto_time_responded": "string",
+            "batch_id": 0,
+            "scheduled_id": 0,
+            "address_shipping": {
+              "street": "string",
+              "house_number": "string",
+              "po_box": "string",
+              "postal_code": "string",
+              "city": "string",
+              "country": "string",
+              "extra": "string",
+              "mailbox_name": "string",
+              "province": "string"
+            },
+            "address_billing": {
+              "street": "string",
+              "house_number": "string",
+              "po_box": "string",
+              "postal_code": "string",
+              "city": "string",
+              "country": "string",
+              "extra": "string",
+              "mailbox_name": "string",
+              "province": "string"
+            },
+            "geolocation": {
+              "latitude": 0,
+              "longitude": 0,
+              "altitude": 0,
+              "radius": 0
+            },
+            "request_reference_split_the_bill": [
+              {
+                "type": "string",
+                "id": 0
+              }
+            ],
+            "balance_after_mutation": {
+              "value": "string",
+              "currency": "string"
+            }
+          },
+          "bunq_me_tab_id": 0
+        }
+      ]
+    }
+  }]
+  }
