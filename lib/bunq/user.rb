@@ -3,6 +3,8 @@
 require_relative 'resource'
 require_relative 'monetary_account'
 require_relative 'monetary_accounts'
+require_relative 'monetary_account_bank'
+require_relative 'monetary_account_banks'
 require_relative 'draft_share_invite_bank'
 require_relative 'draft_share_invite_banks'
 require_relative 'certificate_pinned'
@@ -22,6 +24,14 @@ module Bunq
 
     def monetary_accounts
       Bunq::MonetaryAccounts.new(@resource)
+    end
+
+    def monetary_account_bank(id)
+      Bunq::MonetaryAccountBank.new(@resource, id)
+    end
+
+    def monetary_account_banks
+      Bunq::MonetaryAccountBanks.new(@resource)
     end
 
     def draft_share_invite_bank(id)
