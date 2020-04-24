@@ -11,11 +11,16 @@ require_relative 'certificate_pinned'
 require_relative 'card'
 require_relative 'cards'
 require_relative 'notification_filter_url'
+require_relative 'attachment'
 
 module Bunq
   class User
     def initialize(client, id)
       @resource = Bunq::Resource.new(client, "/v1/user/#{id}")
+    end
+
+    def attachment(id)
+      Bunq::Attachment.new(@resource, id)
     end
 
     def monetary_account(id)
