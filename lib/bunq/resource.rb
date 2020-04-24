@@ -6,6 +6,20 @@ require 'json'
 
 module Bunq
   class Resource
+    HEADER_ACCEPT = 'Accept'
+    HEADER_ATTACHMENT_DESCRIPTION = 'X-Bunq-Attachment-Description'
+    HEADER_CACHE_CONTROL = 'Cache-Control'
+    HEADER_CONTENT_TYPE = 'Content-Type'
+    HEADER_CLIENT_AUTH = 'X-Bunq-Client-Authentication'
+    HEADER_CLIENT_REQUEST_ID = 'X-Bunq-Client-Request-Id'
+    HEADER_CLIENT_SIGNATURE = 'X-Bunq-Client-Signature'
+    HEADER_GEOLOCATION = 'X-Bunq-Geolocation'
+    HEADER_LANGUAGE = 'X-Bunq-Language'
+    HEADER_REGION = 'X-Bunq-Region'
+    HEADER_USER_AGENT = 'User-Agent'
+
+    APPLICATION_JSON = 'application/json'
+
     NO_PARAMS = {}.freeze
 
     def initialize(client, path)
@@ -21,11 +35,13 @@ module Bunq
       raise Bunq::Timeout
     end
 
-    def post(payload, skip_verify: false, encrypt: false, &block)
-      body = JSON.generate(payload)
+    def post(payload, skip_verify: false, encrypt: false, custom_headers: {}, &block)
+      custom_headers = JSON.parse(custom_headers.to_json)
+      body = post_body(payload, custom_headers)
       body, headers = client.encryptor.encrypt(body) if encrypt
+      headers = headers.to_h.merge(custom_headers)
 
-      headers = bunq_request_headers('POST', NO_PARAMS, body, headers || {})
+      headers = bunq_request_headers('POST', NO_PARAMS, body, headers)
 
       resource.post(body, headers) do |response, request, result|
         if skip_verify
@@ -79,10 +95,10 @@ module Bunq
     end
 
     def bunq_request_headers(verb, params, payload = nil, headers = {})
-      headers['X-Bunq-Client-Request-Id'] = SecureRandom.uuid
+      headers[HEADER_CLIENT_REQUEST_ID] = SecureRandom.uuid
 
       unless @path.end_with?('/installation') && verb == 'POST'
-        headers['X-Bunq-Client-Signature'] = sign_request(verb, params, headers, payload)
+        headers[HEADER_CLIENT_SIGNATURE] = sign_request(verb, params, headers, payload)
       end
 
       headers
@@ -127,6 +143,14 @@ module Bunq
         fail MaintenanceResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
       else
         fail UnexpectedResponse.new(code: response.code, headers: response.raw_headers, body: response.body)
+      end
+    end
+
+    def post_body(payload, custom_headers)
+      if custom_headers.key?(HEADER_CONTENT_TYPE) && custom_headers[HEADER_CONTENT_TYPE] != APPLICATION_JSON
+        payload
+      else
+        JSON.generate(payload)
       end
     end
   end

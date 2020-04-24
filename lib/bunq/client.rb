@@ -7,6 +7,8 @@ require 'thread_safe'
 require_relative './version'
 require_relative './resource'
 
+require_relative './attachment_publics'
+require_relative './attachment_public'
 require_relative './avatars'
 require_relative './avatar'
 require_relative './installations'
@@ -170,6 +172,8 @@ module Bunq
   #
   # An instance of a +Client+ can be obtained via +Bunq.client+
   class Client
+    APPLICATION_JSON = 'application/json'
+
     attr_accessor :current_session
     attr_reader :configuration
 
@@ -177,6 +181,14 @@ module Bunq
       fail ArgumentError, 'configuration is required' unless configuration
 
       @configuration = configuration
+    end
+
+    def attachment_publics
+      Bunq::AttachmentPublics.new(self)
+    end
+
+    def attachment_public(id)
+      Bunq::AttachmentPublic.new(self, id)
     end
 
     def avatars
@@ -268,17 +280,17 @@ module Bunq
 
     def headers
       {
-        'Accept': 'application/json',
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/json',
-        'User-Agent': configuration.user_agent,
-        'X-Bunq-Language': configuration.language,
-        'X-Bunq-Geolocation': configuration.geolocation,
-        'X-Bunq-Region': configuration.region,
+        Bunq::Resource::HEADER_ACCEPT => APPLICATION_JSON,
+        Bunq::Resource::HEADER_CACHE_CONTROL => 'no-cache',
+        Bunq::Resource::HEADER_CONTENT_TYPE => APPLICATION_JSON,
+        Bunq::Resource::HEADER_USER_AGENT => configuration.user_agent,
+        Bunq::Resource::HEADER_LANGUAGE => configuration.language,
+        Bunq::Resource::HEADER_GEOLOCATION => configuration.geolocation,
+        Bunq::Resource::HEADER_REGION => configuration.region,
       }.tap do |h|
-        h[:'X-Bunq-Client-Authentication'] = configuration.installation_token if configuration.installation_token
+        h[Bunq::Resource::HEADER_CLIENT_AUTH] = configuration.installation_token if configuration.installation_token
 
-        h[:'X-Bunq-Client-Authentication'] = current_session[1]['Token']['token'] if current_session
+        h[Bunq::Resource::HEADER_CLIENT_AUTH] = current_session[1]['Token']['token'] if current_session
       end
     end
 
