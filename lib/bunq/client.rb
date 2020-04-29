@@ -5,6 +5,7 @@ require 'base64'
 require 'thread_safe'
 
 require_relative './version'
+require_relative './header'
 require_relative './resource'
 
 require_relative './attachment_publics'
@@ -280,17 +281,17 @@ module Bunq
 
     def headers
       {
-        Bunq::Resource::HEADER_ACCEPT => APPLICATION_JSON,
-        Bunq::Resource::HEADER_CACHE_CONTROL => 'no-cache',
-        Bunq::Resource::HEADER_CONTENT_TYPE => APPLICATION_JSON,
-        Bunq::Resource::HEADER_USER_AGENT => configuration.user_agent,
-        Bunq::Resource::HEADER_LANGUAGE => configuration.language,
-        Bunq::Resource::HEADER_GEOLOCATION => configuration.geolocation,
-        Bunq::Resource::HEADER_REGION => configuration.region,
+        Bunq::Header::ACCEPT => APPLICATION_JSON,
+        Bunq::Header::CACHE_CONTROL => 'no-cache',
+        Bunq::Header::CONTENT_TYPE => APPLICATION_JSON,
+        Bunq::Header::USER_AGENT => configuration.user_agent,
+        Bunq::Header::LANGUAGE => configuration.language,
+        Bunq::Header::GEOLOCATION => configuration.geolocation,
+        Bunq::Header::REGION => configuration.region,
       }.tap do |h|
-        h[Bunq::Resource::HEADER_CLIENT_AUTH] = configuration.installation_token if configuration.installation_token
+        h[Bunq::Header::CLIENT_AUTH] = configuration.installation_token if configuration.installation_token
 
-        h[Bunq::Resource::HEADER_CLIENT_AUTH] = current_session[1]['Token']['token'] if current_session
+        h[Bunq::Header::CLIENT_AUTH] = current_session[1]['Token']['token'] if current_session
       end
     end
 

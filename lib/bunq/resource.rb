@@ -6,18 +6,6 @@ require 'json'
 
 module Bunq
   class Resource
-    HEADER_ACCEPT = 'Accept'
-    HEADER_ATTACHMENT_DESCRIPTION = 'X-Bunq-Attachment-Description'
-    HEADER_CACHE_CONTROL = 'Cache-Control'
-    HEADER_CONTENT_TYPE = 'Content-Type'
-    HEADER_CLIENT_AUTH = 'X-Bunq-Client-Authentication'
-    HEADER_CLIENT_REQUEST_ID = 'X-Bunq-Client-Request-Id'
-    HEADER_CLIENT_SIGNATURE = 'X-Bunq-Client-Signature'
-    HEADER_GEOLOCATION = 'X-Bunq-Geolocation'
-    HEADER_LANGUAGE = 'X-Bunq-Language'
-    HEADER_REGION = 'X-Bunq-Region'
-    HEADER_USER_AGENT = 'User-Agent'
-
     APPLICATION_JSON = 'application/json'
 
     NO_PARAMS = {}.freeze
@@ -95,10 +83,10 @@ module Bunq
     end
 
     def bunq_request_headers(verb, params, payload = nil, headers = {})
-      headers[HEADER_CLIENT_REQUEST_ID] = SecureRandom.uuid
+      headers[Bunq::Header::CLIENT_REQUEST_ID] = SecureRandom.uuid
 
       unless @path.end_with?('/installation') && verb == 'POST'
-        headers[HEADER_CLIENT_SIGNATURE] = sign_request(verb, params, headers, payload)
+        headers[Bunq::Header::CLIENT_SIGNATURE] = sign_request(verb, params, headers, payload)
       end
 
       headers
@@ -147,7 +135,8 @@ module Bunq
     end
 
     def post_body(payload, custom_headers)
-      if custom_headers.key?(HEADER_CONTENT_TYPE) && custom_headers[HEADER_CONTENT_TYPE] != APPLICATION_JSON
+      if custom_headers.key?(Bunq::Header::CONTENT_TYPE) &&
+         custom_headers[Bunq::Header::CONTENT_TYPE] != APPLICATION_JSON
         payload
       else
         JSON.generate(payload)
