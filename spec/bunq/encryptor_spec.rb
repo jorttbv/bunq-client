@@ -14,9 +14,9 @@ describe Bunq::Encryptor do
     let(:encrypted_body) { encryption_data.first }
     let(:encryption_headers) { encryption_data.last }
 
-    let(:iv) { Base64.strict_decode64(encryption_headers[described_class::HEADER_CLIENT_ENCRYPTION_IV]) }
-    let(:encrypted_key) { Base64.strict_decode64(encryption_headers[described_class::HEADER_CLIENT_ENCRYPTION_KEY]) }
-    let(:hmac) { Base64.strict_decode64(encryption_headers[described_class::HEADER_CLIENT_ENCRYPTION_HMAC]) }
+    let(:iv) { Base64.strict_decode64(encryption_headers[Bunq::Header::CLIENT_ENCRYPTION_IV]) }
+    let(:encrypted_key) { Base64.strict_decode64(encryption_headers[Bunq::Header::CLIENT_ENCRYPTION_KEY]) }
+    let(:hmac) { Base64.strict_decode64(encryption_headers[Bunq::Header::CLIENT_ENCRYPTION_HMAC]) }
 
     let(:key) { server_private_key.private_decrypt(encrypted_key) }
 

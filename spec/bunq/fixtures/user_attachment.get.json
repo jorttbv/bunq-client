@@ -1,0 +1,15 @@
+{
+  "Response": [
+    {
+      "Attachment": {
+        "id": 4,
+        "created": "string",
+        "updated": "string",
+        "attachment": {
+          "description": "string",
+          "content_type": "string"
+        }
+      }
+    }
+  ]
+}

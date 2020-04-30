@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'attachments'
 require_relative 'notification_filter_url'
 require_relative 'bunqme_tab'
 require_relative 'bunqme_tabs'
@@ -10,6 +11,10 @@ module Bunq
   class MonetaryAccount
     def initialize(parent_resource, id)
       @resource = parent_resource.append("/monetary-account/#{id}")
+    end
+
+    def attachments
+      Bunq::Attachments.new(@resource)
     end
 
     def bunqme_tab(id)

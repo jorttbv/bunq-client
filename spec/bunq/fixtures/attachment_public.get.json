@@ -1,0 +1,15 @@
+{
+  "Response":[
+     {
+        "AttachmentPublic":{
+           "uuid":"b07faaa7-003a-4cdf-a2c1-434e71d42fca",
+           "created":"2015-06-13 23:19:16.215235",
+           "updated":"2015-06-30 09:12:31.981573",
+           "attachment":{
+              "description":"My picture.",
+              "content_type":"image/jpeg"
+           }
+        }
+     }
+  ]
+}

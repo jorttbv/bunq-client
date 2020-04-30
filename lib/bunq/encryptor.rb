@@ -2,9 +2,6 @@
 
 module Bunq
   class Encryptor
-    HEADER_CLIENT_ENCRYPTION_HMAC = 'X-Bunq-Client-Encryption-Hmac'
-    HEADER_CLIENT_ENCRYPTION_IV = 'X-Bunq-Client-Encryption-Iv'
-    HEADER_CLIENT_ENCRYPTION_KEY = 'X-Bunq-Client-Encryption-Key'
     AES_ENCRYPTION_METHOD = 'aes-256-cbc'
     HMAC_ALGORITHM = 'sha1'
 
@@ -19,13 +16,13 @@ module Bunq
 
       iv, key, encrypted_body = encrypt_body(body)
 
-      headers[HEADER_CLIENT_ENCRYPTION_IV] = Base64.strict_encode64(iv)
+      headers[Bunq::Header::CLIENT_ENCRYPTION_IV] = Base64.strict_encode64(iv)
 
       encrypted_key = server_public_key.public_encrypt(key)
-      headers[HEADER_CLIENT_ENCRYPTION_KEY] = Base64.strict_encode64(encrypted_key)
+      headers[Bunq::Header::CLIENT_ENCRYPTION_KEY] = Base64.strict_encode64(encrypted_key)
 
       digest = hmac(key, iv + encrypted_body)
-      headers[HEADER_CLIENT_ENCRYPTION_HMAC] = Base64.strict_encode64(digest)
+      headers[Bunq::Header::CLIENT_ENCRYPTION_HMAC] = Base64.strict_encode64(digest)
 
       [encrypted_body, headers]
     end
