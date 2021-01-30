@@ -1,0 +1,40 @@
+name: rspec
+
+on:
+  [push]
+
+env:
+  RACK_ENV: test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - ruby-version: 3.0.0
+          - ruby-version: 2.7
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+      - name: Cache bundler
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Install bundler
+        run: |
+          gem install bundler
+      - name: Install ruby dependencies
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4
+      - name: Run tests
+        run: bundle exec rspec
