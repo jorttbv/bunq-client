@@ -9,7 +9,7 @@ module Bunq
     end
 
     def create(attachment_public_uuid)
-      @resource.with_session { @resource.post(attachment_public_uuid: attachment_public_uuid) }['Response']
+      @resource.with_session { @resource.post({attachment_public_uuid: attachment_public_uuid}) }['Response']
     end
   end
 end
