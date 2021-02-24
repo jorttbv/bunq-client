@@ -14,7 +14,7 @@ module Bunq
     def create
       fail 'Cannot create session, please add the api_key to your configuration' unless @api_key
 
-      @resource.post(secret: @api_key)['Response']
+      @resource.post({secret: @api_key})['Response']
     end
   end
 end

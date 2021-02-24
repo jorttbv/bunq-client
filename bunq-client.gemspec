@@ -32,13 +32,13 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'rest-client', '~> 2.0'
+  spec.add_runtime_dependency 'rest-client', ['>= 2.0', '< 2.2']
   spec.add_runtime_dependency 'thread_safe', '~> 0.3.6'
 
-  spec.add_development_dependency 'codecov', '~> 0.1.10'
+  spec.add_development_dependency 'codecov', '~> 0.4.2'
   spec.add_development_dependency 'rake', '~> 12.3'
-  spec.add_development_dependency 'rspec', '~> 3.7'
-  spec.add_development_dependency 'rspec-json_expectations', '~> 2.1'
+  spec.add_development_dependency 'rspec', '~> 3.10'
+  spec.add_development_dependency 'rspec-json_expectations', '~> 2.2'
   spec.add_development_dependency 'rubocop', '~> 0.82.0'
-  spec.add_development_dependency 'webmock', '~> 3.8.3'
+  spec.add_development_dependency 'webmock', '~> 3.11'
 end

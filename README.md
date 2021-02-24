@@ -1,5 +1,7 @@
 # Bunq::Client
 
+[![rspec Actions Status](https://github.com/jorttbv/bunq-client/workflows/rspec/badge.svg)](https://github.com/jorttbv/bunq-client/actions)
+
 The `Bunq::Client` is a ruby wrapper of the [bunq Public API](https://doc.bunq.com) extracted from [Jortt Online boekhouden](https://www.jortt.nl).
 
 The `Bunq::Client` is the main interface which can be used to navigate to other resources. The response objects are just
