@@ -11,7 +11,7 @@ module Bunq
       @resource.with_session { @resource.get }['Response']
     end
 
-    def ip(id)
+    def ips(id)
       Bunq::Ips.new(@resource, id)
     end
   end
