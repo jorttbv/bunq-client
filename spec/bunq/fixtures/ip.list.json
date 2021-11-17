@@ -1,0 +1,18 @@
+{
+  "Response": [
+    {
+      "PermittedIp": {
+        "id": 123,
+        "created": "2018-04-24 09:22:57.333333",
+        "updated": "2018-04-24 09:22:57.121212",
+        "ip": "101.211.110.10",
+        "status": "ACTIVE"
+      }
+    }
+  ],
+  "Pagination": {
+    "future_url": "/v1/user/1/credential-password-ip/222/ip?newer_id=123",
+    "newer_url": null,
+    "older_url": null
+  }
+}
