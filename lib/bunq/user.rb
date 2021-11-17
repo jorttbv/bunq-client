@@ -63,6 +63,10 @@ module Bunq
       Bunq::NotificationFilterUrl.new(@resource)
     end
 
+    def credential_password_ips
+      Bunq::CredentialPasswordIps.new(@resource)
+    end
+
     def show
       @resource.with_session { @resource.get }['Response']
     end
