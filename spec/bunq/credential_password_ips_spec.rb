@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Bunq::CredentialPasswordIp do
+describe Bunq::CredentialPasswordIps do
   let(:client) { Bunq.client }
   let(:user_id) { '1' }
   let(:user) { client.user(user_id) }
@@ -15,22 +15,22 @@ describe Bunq::CredentialPasswordIp do
       stub_request(:get, url)
         .to_return(body: response)
 
-      result = user.credential_password_ip.list
+      result = user.credential_password_ip.index
       expect(result).to include_json [
-        { "CredentialPasswordIp": { "id": 12121212 } }, { "CredentialPasswordIp": { "id": 21212121 } }
+        { CredentialPasswordIp: { "id": 12121212 } }, { CredentialPasswordIp: { "id": 21212121 } }
       ]
     end
   end
 
-  describe '#ip', :requires_session do
-    describe '#list' do
+  describe '#ips', :requires_session do
+    describe '#index' do
       let(:url) { "#{client.configuration.base_url}/v1/user/#{user_id}/credential-password-ip/12121212/ip" }
       let(:response) { IO.read('spec/bunq/fixtures/ip.list.json') }
       it 'lists all ips of a credential-password-ip' do
         stub_request(:get, url)
           .to_return(body: response)
 
-        result = user.credential_password_ip.ip('12121212').list
+        result = user.credential_password_ip.ip('12121212').index
         expect(result).to include_json [
           { "PermittedIp": { "id": 123 } }
         ]
@@ -51,7 +51,7 @@ describe Bunq::CredentialPasswordIp do
       end
     end
 
-    describe '#add_ip_address' do
+    describe '#create' do
       let(:url) { "#{client.configuration.base_url}/v1/user/#{user_id}/credential-password-ip/12121212/ip" }
       let(:response) { IO.read('spec/bunq/fixtures/ip.post.json') }
 
@@ -60,7 +60,7 @@ describe Bunq::CredentialPasswordIp do
           .with(body: { ip: '111.111.222.111', status: 'ACTIVE' }.to_json)
           .to_return(body: response)
 
-        result = user.credential_password_ip.ip('12121212').add_ip_address('111.111.222.111', 'ACTIVE')
+        result = user.credential_password_ip.ip('12121212').create('111.111.222.111', 'ACTIVE')
         expect(result).to include_json [
           { "Id": { "id": 42 } }
         ]

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Bunq
-  class Ip
+  class Ips
     def initialize(parent_resource, id)
       fail ArgumentError, 'id is required' if id.nil?
 
       @resource = parent_resource.append("/#{id}/ip")
     end
 
-    def list
+    def index
       @resource.with_session { @resource.get }['Response']
     end
 
@@ -16,7 +16,7 @@ module Bunq
       @resource.with_session { @resource.append("/#{id}").get }['Response']
     end
 
-    def add_ip_address(ip_address, status)
+    def create(ip_address, status)
       fail ArgumentError, 'ip_address is required' if ip_address.nil?
       fail ArgumentError, 'status is required' if status.nil?
 

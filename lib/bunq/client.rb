@@ -26,7 +26,7 @@ require_relative './payment'
 require_relative './payments'
 require_relative './signature'
 require_relative './attachment_public_content'
-require_relative './credential_password_ip'
+require_relative './credential_password_ips'
 
 ##
 # Usage

@@ -64,7 +64,7 @@ module Bunq
     end
 
     def credential_password_ip
-      Bunq::CredentialPasswordIp.new(@resource)
+      Bunq::CredentialPasswordIps.new(@resource)
     end
 
     def show
