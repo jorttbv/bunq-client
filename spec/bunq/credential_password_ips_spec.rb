@@ -15,7 +15,7 @@ describe Bunq::CredentialPasswordIps do
       stub_request(:get, url)
         .to_return(body: response)
 
-      result = user.credential_password_ip.index
+      result = user.credential_password_ips.index
       expect(result).to include_json [
         { CredentialPasswordIp: { "id": 12121212 } }, { CredentialPasswordIp: { "id": 21212121 } }
       ]
@@ -30,7 +30,7 @@ describe Bunq::CredentialPasswordIps do
         stub_request(:get, url)
           .to_return(body: response)
 
-        result = user.credential_password_ip.ip('12121212').index
+        result = user.credential_password_ips.ips('12121212').index
         expect(result).to include_json [
           { "PermittedIp": { "id": 123 } }
         ]
@@ -44,7 +44,7 @@ describe Bunq::CredentialPasswordIps do
         stub_request(:get, url)
           .to_return(body: response)
 
-        result = user.credential_password_ip.ip('12121212').show('123')
+        result = user.credential_password_ips.ips('12121212').show('123')
         expect(result).to include_json [
           { "PermittedIp": { "id": 123 } }
         ]
@@ -60,7 +60,7 @@ describe Bunq::CredentialPasswordIps do
           .with(body: { ip: '111.111.222.111', status: 'ACTIVE' }.to_json)
           .to_return(body: response)
 
-        result = user.credential_password_ip.ip('12121212').create('111.111.222.111', 'ACTIVE')
+        result = user.credential_password_ips.ips('12121212').create('111.111.222.111', 'ACTIVE')
         expect(result).to include_json [
           { "Id": { "id": 42 } }
         ]
