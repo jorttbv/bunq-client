@@ -63,7 +63,7 @@ module Bunq
       Bunq::NotificationFilterUrl.new(@resource)
     end
 
-    def credential_password_ip
+    def credential_password_ips
       Bunq::CredentialPasswordIps.new(@resource)
     end
 
