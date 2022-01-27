@@ -8,6 +8,10 @@ module Bunq
       @resource = parent_resource.append("/draft-share-invite-bank/#{id}")
     end
 
+    def show
+      @resource.with_session { @resource.get }['Response']
+    end
+
     def qr_code_content
       Bunq::QrCodeContent.new(@resource)
     end

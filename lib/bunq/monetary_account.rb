@@ -4,6 +4,9 @@ require_relative 'attachments'
 require_relative 'notification_filter_url'
 require_relative 'bunqme_tab'
 require_relative 'bunqme_tabs'
+require_relative 'share_invite_monetary_account_inquiry'
+require_relative 'share_invite_monetary_account_inquiries'
+require_relative 'request_inquiries'
 
 module Bunq
   ##
@@ -33,6 +36,10 @@ module Bunq
       Bunq::Payments.new(@resource)
     end
 
+    def request_inquiries
+      Bunq::RequestInquiries.new(@resource)
+    end
+
     ##
     # https://doc.bunq.com/api/1/call/monetary-account/method/get
     def show
@@ -41,6 +48,14 @@ module Bunq
 
     def notification_filter_url
       Bunq::NotificationFilterUrl.new(@resource)
+    end
+
+    def share_invite_monetary_account_inquiry(id)
+      Bunq::ShareInviteMonetaryAccountInquiry.new(@resource, id)
+    end
+
+    def share_invite_monetary_account_inquiries
+      Bunq::ShareInviteMonetaryAccountInquiries.new(@resource)
     end
   end
 end

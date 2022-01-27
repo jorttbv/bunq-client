@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0
+
+- The `user.certificate_pinned` now takes an argument and points to a single pinned certificate
+- Move the `create` of a pinned certificate to the collection resource `user.certificates_pinned`
+- Added more endpoints
+
 ## 1.0.0
 
 - Ruby 3.0

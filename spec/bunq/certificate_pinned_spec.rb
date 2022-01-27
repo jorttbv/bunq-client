@@ -28,7 +28,7 @@ describe Bunq::CertificatePinned do
           },
         )
 
-      result = user.certificate_pinned.create('MY CERTIFICATE')
+      result = user.certificates_pinned.create('MY CERTIFICATE')
       expect(result).to include_json({"Response": [{"Id": {"id": 82}}]})
     end
   end
