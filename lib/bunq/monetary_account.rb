@@ -6,6 +6,7 @@ require_relative 'bunqme_tab'
 require_relative 'bunqme_tabs'
 require_relative 'share_invite_monetary_account_inquiry'
 require_relative 'share_invite_monetary_account_inquiries'
+require_relative 'request_inquiries'
 
 module Bunq
   ##
@@ -33,6 +34,10 @@ module Bunq
 
     def payments
       Bunq::Payments.new(@resource)
+    end
+
+    def request_inquiries
+      Bunq::RequestInquiries.new(@resource)
     end
 
     ##
