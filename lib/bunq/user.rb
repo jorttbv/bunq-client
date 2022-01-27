@@ -8,6 +8,7 @@ require_relative 'monetary_account_banks'
 require_relative 'draft_share_invite_bank'
 require_relative 'draft_share_invite_banks'
 require_relative 'certificate_pinned'
+require_relative 'certificates_pinned'
 require_relative 'card'
 require_relative 'cards'
 require_relative 'notification_filter_url'
@@ -47,8 +48,12 @@ module Bunq
       Bunq::DraftShareInviteBanks.new(@resource)
     end
 
-    def certificate_pinned
-      Bunq::CertificatePinned.new(@resource)
+    def certificate_pinned(id)
+      Bunq::CertificatePinned.new(@resource, id)
+    end
+
+    def certificates_pinned
+      Bunq::CertificatesPinned.new(@resource)
     end
 
     def card(id)

@@ -9,6 +9,7 @@ module Bunq
     APPLICATION_JSON = 'application/json'
 
     NO_PARAMS = {}.freeze
+    NO_BODY = nil
 
     def initialize(client, path)
       @client = client
@@ -49,6 +50,16 @@ module Bunq
       headers = bunq_request_headers('PUT', NO_PARAMS, body, headers || {})
 
       resource.put(body, headers) do |response, request, result|
+        verify_and_handle_response(response, request, result, &block)
+      end
+    rescue RestClient::Exceptions::Timeout
+      raise Bunq::Timeout
+    end
+
+    def delete(&block)
+      headers = bunq_request_headers('DELETE', NO_PARAMS, NO_BODY)
+
+      resource.delete(headers) do |response, request, result|
         verify_and_handle_response(response, request, result, &block)
       end
     rescue RestClient::Exceptions::Timeout
